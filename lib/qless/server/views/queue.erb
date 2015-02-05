@@ -54,21 +54,21 @@
 
 <div class="row">
   <div class="span8">
-    <h2><a href="<%= u "/queues/#{CGI::escape(queue['name'])}" %>"><%= queue['name'] %></a> |
-      <%= queue['running']   %> /
-      <%= queue['waiting']   %> /
-      <%= queue['scheduled'] %> /
-      <%= queue['stalled']   %> /
-      <%= queue['depends']   %> <small>(running / waiting / scheduled / stalled / depends)</small>
+    <h2><a href="<%= u "/queues/#{CGI::escape(queue['name'])}" %>"><%= queue['name'] %></a>
+      running: <%= queue['running']   %>, 
+      waiting: <%= queue['waiting']   %>, 
+      scheduled: <%= queue['scheduled'] %>, 
+      stalled: <%= queue['stalled']   %>, 
+      depends: <%= queue['depends']   %>
     </h2>
   </div>
 
   <div class="span4">
     <div style="float:right">
       <h2>
-        <%= stats['failed']    %> /
-        <%= stats['failures']  %> /
-        <%= stats['retries']   %> <small>(failed / failures / retries)</small>
+        failed: <%= stats['failed']    %>, 
+        failures: <%= stats['failures']  %>, 
+        retries: <%= stats['retries']   %>
       </h2>
     </div>
   </div>
@@ -89,9 +89,9 @@
         <div class="row">
           <div class="span12">
             <h3>
-              <%= stats['wait']['count'] %> /
-              <%= sprintf('%10.3f', stats['wait']['mean']) %> /
-              <%= sprintf('%10.3f', stats['wait']['std']) %> <small>Total / Mean / Std. Deviation</small>
+              total: <%= stats['wait']['count'] %>,
+              mean: <%= sprintf('%10.3f', stats['wait']['mean']) %>, 
+              stddev: <%= sprintf('%10.3f', stats['wait']['std']) %>
             </h3>
           </div>
         </div>
@@ -109,9 +109,9 @@
         <div class="row">
           <div class="span12">
             <h3>
-              <%= stats['run']['count'] %> /
-              <%= sprintf('%10.3f', stats['run']['mean']) %> /
-              <%= sprintf('%10.3f', stats['run']['std']) %> <small>Total / Mean / Std. Deviation</small>
+              total: <%= stats['run']['count'] %>,
+              mean: <%= sprintf('%10.3f', stats['run']['mean']) %>,
+              stddev: <%= sprintf('%10.3f', stats['run']['std']) %>
             </h3>
           </div>
         </div>

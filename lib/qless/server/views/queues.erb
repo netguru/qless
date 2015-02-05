@@ -30,12 +30,12 @@
       </h3>
     </div>
     <div class="span8">
-      <h3> |
-        <%= queue['running']   %> /
-        <%= queue['waiting']   %> /
-        <%= queue['scheduled'] %> /
-        <%= queue['stalled']   %> /
-        <%= queue['depends']   %> <small>(running / waiting / scheduled / stalled / depends)</small>
+      <h3>
+        running: <%= queue['running']   %>, 
+        waiting: <%= queue['waiting']   %>, 
+        scheduled: <%= queue['scheduled'] %>, 
+        stalled: <%= queue['stalled']   %>, 
+        depends: <%= queue['depends']   %>
       </h3>
     </div>
   </div>
