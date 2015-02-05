@@ -64,7 +64,7 @@ module Qless
         end
       end
 
-      PAGE_SIZE = 25
+      PAGE_SIZE = 200
       def pagination_values
         start = (current_page - 1) * PAGE_SIZE
         [start, start + PAGE_SIZE]
@@ -429,9 +429,9 @@ module Qless
       # Expects a JSON-encoded hash of type: failure-type
       data = JSON.parse(request.body.read)
       if data["type"].nil?
-        halt 400, "Neet type"
+        halt 400, "Need type"
       else
-        return json(client.jobs.failed(data["type"], 0, 500)['jobs'].map do |job|
+        return json(client.jobs.failed(data['type'])['jobs'].map do |job|
           job.move(job.queue_name)
           { :id => job.jid, :queue => job.queue_name }
         end)
