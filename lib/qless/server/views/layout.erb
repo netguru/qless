@@ -19,6 +19,11 @@
       padding-top: 60px;
     }
 
+    h2 {
+      font-size: 20px;
+      line-height: 40px;
+    }
+
     .btn-group span {
       /* This is ugly. Anyone want to change it? */
       border-color: #e6e6e6 #e6e6e6 #bfbfbf;
@@ -206,6 +211,10 @@
         });
         action();
       });
+    }
+
+    var updateFilters = function(tag) {
+      console.log("UPDATE DEM FILTERS!");
     }
 
     /* Helper function for adding a tag to a job */

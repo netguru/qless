@@ -89,7 +89,7 @@
 	      <div class="span12 tags" style="margin-bottom: 3px;">
 	        <% job.tags.each do |tag| %>
 	        <div class="btn-group" style="float:left">
-	          <span class="tag"><%= tag %></span>
+            <span class="tag"><a href="<%= u "/tag/?tag=#{tag}" %>"><%= tag %></a></span>
 				    <button class="btn" onclick="untag('<%= job.jid %>', '<%= tag %>')">
 	            <i class="icon-remove"></i>
 	          </button>

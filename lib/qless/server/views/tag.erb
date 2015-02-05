@@ -1,5 +1,14 @@
 <div class="page-header">
   <h2>Jobs tagged '<%= tag %>'</h2>
+  <div class="tag-filters">
+    <input type="checkbox" name="running" value="running">running<br>
+    <input type="checkbox" name="waiting" value="waiting">waiting<br>
+    <input type="checkbox" name="scheduled" value="scheduled">scheduled<br>
+    <input type="checkbox" name="stalled" value="stalled">stalled<br>
+    <input type="checkbox" name="depends" value="depends">depends<br>
+    <button type="button" onclick="updateFilters('<%= tag %>')">Filter</button>
+  </div>
+</form>
 </div>
 
 <%= erb :_job_list, :locals => { :jobs => jobs, :queues => queues } %>
