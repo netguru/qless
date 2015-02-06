@@ -3,13 +3,21 @@
 <div class="page-header">
   <h2>Jobs tagged '<%= tag %>'</h2>
   <div id="tag-filters">
-    <% statuses.each do |status| %>
-      <input type="checkbox" id="<%= status %>" value="<%= status %>">
-      <label for="<%= status %>" style="display:inline; margin-right: 10px"><%= status.capitalize %></label>
-    <% end %>
+    <form class="form-inline">
+      <div class="form-group">
+        <% statuses.each do |status| %>
+          <div class="checkbox" style="margin-right: 10px;">
+            <label>
+            <input type="checkbox" id="<%= status %>" value="<%= status %>">
+            <%= status.capitalize %>
+            </label>
+          </div>
+        <% end %>
 
-    <button type="button" onclick="updateFilters()">Filter</button>
-    <button type="button" onclick="clearFilters()">Clear</button>
+        <button class="form-control" type="button" onclick="updateFilters()">Filter</button>
+        <button class="form-control" type="button" onclick="clearFilters()">Clear</button>
+      </form>
+    </form>
   </div>
 </form>
 </div>
