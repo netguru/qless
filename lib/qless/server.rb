@@ -265,13 +265,35 @@ module Qless
     end
 
     get '/tag/?' do
-      jobs = paginated(client.jobs, :tagged, params[:tag])
+      status = (params[:status] || "").split(",")
+      tag = params[:tag]
+
+      data = client.jobs.tagged(params[:tag], 500)
+
+      if data.is_a?(Hash)
+        if data.any?
+          data['page_count'] = (data['total'].to_i / PAGE_SIZE.to_f).ceil
+        else
+          data['page_count'] = 1
+        end
+      end
+
+      jobs = data["jobs"].map { |jid| client.jobs[jid] }
+
+      if status.length > 0
+        jobs = jobs.select { |job| status.include? job.state }
+      end
+
+      start = (current_page - 1) * PAGE_SIZE
+
+      jobs = jobs[start..start+PAGE_SIZE] || []
+
       erb :tag, :layout => true, :locals => {
         :title => "Tag | #{params[:tag]}",
         :tag   => params[:tag],
-        :jobs  => jobs['jobs'].map { |jid| client.jobs[jid] },
-        :total => jobs['total'],
-        :page_count => jobs['page_count']
+        :jobs  => jobs,
+        :total => data["total"],
+        :page_count => data["page_count"]
       }
     end
 

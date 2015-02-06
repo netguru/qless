@@ -1,6 +1,72 @@
+<% statuses = %w{ running waiting scheduled stalled depends complete failed } %>
+
 <div class="page-header">
   <h2>Jobs tagged '<%= tag %>'</h2>
+  <div id="tag-filters">
+    <% statuses.each do |status| %>
+      <input type="checkbox" id="<%= status %>" value="<%= status %>">
+      <label for="<%= status %>" style="display:inline; margin-right: 10px"><%= status.capitalize %></label>
+    <% end %>
+
+    <button type="button" onclick="updateFilters()">Filter</button>
+    <button type="button" onclick="clearFilters()">Clear</button>
+  </div>
+</form>
 </div>
 
 <%= erb :_job_list, :locals => { :jobs => jobs, :page_count => page_count, :queues => queues } %>
 
+<script type="text/javascript">
+  function updateFilters() {
+    var checkboxes = document.querySelectorAll("#tag-filters input[type='checkbox']");
+    var statuses = [];
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      var checkbox = checkboxes[i];
+      if (checkbox.checked) {
+        statuses.push(checkbox.value);
+      }
+    }
+
+    var query = location.search;
+    var match = query.match(/([&\?]status=(.*))&?/);
+
+    if (match == null) {
+      location.search += "&status=" + encodeURIComponent(statuses.join(","));
+    } else {
+      if (statuses.length == 0) {
+        query = query.replace(match[1], "");
+      } else {
+        query = query.replace(match[1], "&status=" + encodeURIComponent(statuses.join(",")));
+      }
+
+      location.search = query;
+    }
+  }
+
+  function clearFilters() {
+    var checkboxes = document.querySelectorAll("#tag-filters input[type='checkbox']");
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = false;
+    }
+
+    updateFilters();
+  }
+
+  function setFilters() {
+    var query = location.search;
+    var match = query.match(/([&\?]status=(.*))&?/);
+
+    if (match != null) {
+      statuses = decodeURIComponent(match[2]).split(",");
+
+      for (var i = 0; i < statuses.length; i++) {
+        var checkbox = document.getElementById(statuses[i]);
+        checkbox.checked = true;
+      }
+    }
+  }
+
+  setFilters();
+</script>
