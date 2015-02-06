@@ -4,7 +4,7 @@ source "http://rubygems.org"
 gemspec
 
 group :extras do
-  gem 'debugger', :platform => :mri
+  gem 'byebug', :platform => :mri
 end
 
 gem 'thin' # needed by qless-web binary
