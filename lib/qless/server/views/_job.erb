@@ -159,7 +159,7 @@
 	    <div class="row">
 	      <div class="col-md-12">
 	        <div class="alert alert-danger">
-	          <p>In <strong><%= job.queue_name %></strong> on <strong><%= job.failure['worker'] %></strong>
+	          <p style="padding: 0px 0px 12px 0px;">In <strong><%= job.queue_name %></strong> on <strong><%= job.failure['worker'] %></strong>
 	            about <%= strftime(Time.at(job.failure['when'])) %></p>
 	          <pre><%= job.failure['message'].gsub('>', '&gt;').gsub('<', '&lt;') %></pre>
 	        </div>
