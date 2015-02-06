@@ -268,7 +268,7 @@ module Qless
       status = (params[:status] || "").split(",")
       tag = params[:tag]
 
-      data = client.jobs.tagged(params[:tag], 500)
+      data = client.jobs.tagged(tag, 0, 500)
 
       if data.is_a?(Hash)
         if data.any?
