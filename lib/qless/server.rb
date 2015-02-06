@@ -56,6 +56,12 @@ module Qless
         page_url -1
       end
 
+      def specific_page_url(page)
+        url_with_modified_query do |query|
+          query.merge('page' => page)
+        end
+      end
+
       def current_page
         @current_page ||= begin
           Integer(params[:page])
@@ -71,7 +77,24 @@ module Qless
       end
 
       def paginated(qless_object, method, *args)
-        qless_object.send(method, *(args + pagination_values))
+        data = qless_object.send(method, *(args + pagination_values))
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        puts data.inspect
+        puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+        if data.is_a?(Hash)
+          if data.any?
+            data['page_count'] = (data['total'].to_i / PAGE_SIZE.to_f).ceil
+          else
+            data['page_count'] = 1
+          end
+        end
+
+        data
       end
 
       def tabs
@@ -177,9 +200,11 @@ module Qless
       tab   = params.fetch('tab', 'stats')
 
       jobs = if tab == 'waiting'
-        queue.peek(20)
+        js = queue.peek(20)
+        { 'jobs' => js, 'page_count' => (js.length / PAGE_SIZE.to_f).ceil }
       elsif filtered_tabs.include?(tab)
-        paginated(queue.jobs, tab).map { |jid| client.jobs[jid] }
+        js = paginated(queue.jobs, tab).map { |jid| client.jobs[jid] }
+        { 'jobs' => js, 'page_count' => (js.length / PAGE_SIZE.to_f).ceil }
       else
         []
       end
@@ -252,7 +277,8 @@ module Qless
         :title => "Tag | #{params[:tag]}",
         :tag   => params[:tag],
         :jobs  => jobs['jobs'].map { |jid| client.jobs[jid] },
-        :total => jobs['total']
+        :total => jobs['total'],
+        :page_count => jobs['page_count']
       }
     end
 

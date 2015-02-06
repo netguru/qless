@@ -1,7 +1,13 @@
-<div class="pagination">
+<% first_page = [(params['page'] || 1).to_i - 10, 1].max %>
+<% last_page = [(params['page'] || 1).to_i + 10, page_count].min %>
+<div class="pagination pagination-centered">
   <ul>
-    <li><a href="<%= prev_page_url %>">Prev</a></li>
-    <li><a href="<%= next_page_url %>">Next</a></li>
+    <li class="<%= ((params['page'] || 1).to_i == 1) ? 'disabled' : '' %>"><a href="<%= specific_page_url(1) %>">First</a></li>
+    <li class="<%= ((params['page'] || 1).to_i == 1) ? 'disabled' : '' %>"><a href="<%= prev_page_url %>">Prev</a></li>
+      <% (first_page..last_page).to_a.each do |page| %>
+        <li class="<%= (params['page'] || 1).to_i == page ? 'active' : '' %>"><a href="<%= specific_page_url(page) %>"><%= page %></a></li>
+      <% end %>
+    <li class="<%= ((params['page'] || 1).to_i == page_count) ? 'disabled' : '' %>"><a href="<%= next_page_url %>">Next</a></li>
+    <li class="<%= ((params['page'] || 1).to_i == page_count) ? 'disabled' : '' %>"><a href="<%= specific_page_url(page_count) %>">Last</a></li>
   </ul>
 </div>
-
