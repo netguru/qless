@@ -1,4 +1,4 @@
-<% statuses = %w{ running waiting scheduled stalled depends complete failed } %>
+<% statuses = %w{ running waiting scheduled stalled depends failed complete } %>
 
 <div class="page-header">
   <h2>Jobs tagged '<%= tag %>'</h2>
@@ -16,6 +16,7 @@
 
         <button class="form-control" type="button" onclick="updateFilters()">Filter</button>
         <button class="form-control" type="button" onclick="clearFilters()">Clear</button>
+        <button class="form-control" type="button" onclick="showIncomplete()">Show Incomplete</button>
       </form>
     </form>
   </div>
@@ -50,6 +51,16 @@
 
       location.search = query;
     }
+  }
+
+  function showIncomplete() {
+    var checkboxes = document.querySelectorAll("#tag-filters input[type='checkbox']");
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      var checkbox = checkboxes[i];
+      checkbox.checked = (checkbox.id != "complete");
+    }
+    updateFilters();
   }
 
   function clearFilters() {
