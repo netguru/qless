@@ -14,9 +14,11 @@
           </div>
         <% end %>
 
-        <button class="form-control" type="button" onclick="updateFilters()">Filter</button>
-        <button class="form-control" type="button" onclick="clearFilters()">Clear</button>
-        <button class="form-control" type="button" onclick="showIncomplete()">Show Incomplete</button>
+        <div class="btn-group" role="group">
+          <button class="form-control btn btn-primary" type="button" onclick="updateFilters()">Filter</button>
+          <button class="form-control btn btn-success" type="button" onclick="showIncomplete()">Show Incomplete</button>
+        </div>
+        <button class="form-control btn btn-danger" type="button" onclick="clearFilters()">Clear</button>
       </form>
     </form>
   </div>
