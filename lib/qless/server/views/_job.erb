@@ -1,67 +1,79 @@
 <% if job.instance_of?(Qless::Job) %>
-	<div class="row" id="job-<%= job.jid %>">
-	  <div class="span12">
+	<div class="row" id="job-<%= job.jid.gsub('.', '') %>">
+	  <div class="col-md-12">
 	    <div class="row">
-	      <div class="span6">
-	        <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
-	          <a href="<%= u "/jobs/#{job.jid}" %>"><%= job.jid[0..8] %>...</a> | <%= job.klass_name %>
-	        </h2>
+	      <div class="col-md-6">
+
+	        <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
+            <h4>
+              <% if job.state == 'failed' %>
+                <span class="label label-danger"><%= job.state %></span>
+              <% elsif job.state == 'complete' %>
+                <span class="label label-success"><%= job.state %></span>
+              <% elsif job.state == 'stalled' %>
+                <span class="label label-warning"><%= job.state %></span>
+              <% else %>
+                <span class="label label-default"><%= job.state %></span>
+              <% end %>
+            </h4>
+	        </div>
+
+	        <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
+            <h5>
+              <% if job.jid.length > 50 %>
+                <a href="<%= u "/jobs/#{job.jid}" %>"><%= job.jid[0..50] %>...</a> | <%= job.klass_name %>
+              <% else %>
+                <a href="<%= u "/jobs/#{job.jid}" %>"><%= job.jid %></a> | <%= job.klass_name %>
+              <% end %>
+            </h5>
+	        </div>
 	      </div>
-	      <div class="span3">
-	        <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
-	          <strong>
-	            | <%= job.state %> / <a href="<%= u "/queues/#{CGI::escape(job.queue_name)}" %>"><%= job.queue_name %></a><%= job.worker_name.nil? ? "/ #{job.worker_name}" : "" %>
-	          </strong>
-	        </h2>
-	      </div>
-	      <div class="span3">
-	        <div style="float:right; margin-top: 4px">
+	      <div class="col-md-6 text-right">
+          <div>
 	          <div class="btn-group">
 	            <% if (job.state != "complete") %>
-	            <button title="delete" class="btn btn-danger" onclick="confirmation(this, 'Delete?', function() { cancel('<%= job.jid %>', fade) })"><i class="icon-remove"></i></button>
+	            <button title="delete" class="btn btn-danger" onclick="confirmation(this, 'Delete?', function() { cancel('<%= job.jid %>', fade) })"><i class="glyphicon glyphicon-remove"></i></button>
 	            <% end %>
 	            <% if (job.state == "running") %>
-	            <button title="Time out job" class="btn btn-danger" onclick="confirmation(this, 'Time out job?', function() { timeout('<%= job.jid %>') })"><i class="icon-time"></i></button>
+	            <button title="Time out job" class="btn btn-danger" onclick="confirmation(this, 'Time out job?', function() { timeout('<%= job.jid %>') })"><i class="glyphicon glyphicon-time"></i></button>
 	            <% end %>
-	            <button title="track" class="btn<%= job.tracked ? " active" : "" %>" data-toggle="button" onclick="$(this).hasClass('active') ? untrack('<%= job.jid %>', fade) : track('<%= job.jid %>', [], fade)"><i class="icon-flag"></i></button>
+	            <button title="track" class="btn btn-default <%= job.tracked ? " active" : "" %>" data-toggle="button" onclick="$(this).hasClass('active') ? untrack('<%= job.jid %>', fade) : track('<%= job.jid %>', [], fade)"><i class="glyphicon glyphicon-flag"></i></button>
 	            <% if (job.state == 'failed') %>
-	            <button title="requeue" class="btn btn-success" onclick="retry('<%= job.jid %>', fade)"><i class="icon-repeat"></i></button>
+	            <button title="requeue" class="btn btn-success" onclick="retry('<%= job.jid %>', fade)"><i class="glyphicon glyphicon-repeat"></i></button>
 	            <% end %>
-	            <button title="move" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
-	              <i class="caret"></i>
-	            </button>
-	            <ul class="dropdown-menu">
-	              <% queues.each do |queue| %>
-	              <a href="#" onclick="move('<%= job.jid %>', '<%= queue['name'] %>', fade)"><%= queue['name'] %></a>
-	              <% end %>
-	            </ul>
+              <button title="move" type="button" class="btn dropdown-toggle btn-success" data-toggle="dropdown" aria-expanded="true">
+                <i class="caret"></i>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <% queues.each do |queue| %>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="move('<%= job.jid %>', '<%= queue['name'] %>', fade)"><%= queue['name'] %></a></li>
+                <% end %>
+              </ul>
 	          </div>
 	        </div>
-	        <div style="float:right; margin-right: 12px; margin-top: 4px">
-	          <div class="btn-group">
-	            <input class="span1 priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
-					    <button class="btn dropdown-toggle" data-toggle="dropdown">
-						    <i class="caret"></i>
-	            </button>
-	            <ul class="dropdown-menu">
-				    	  <a href="#" onclick="priority('<%= job.jid %>',  25)">high</a>
-	              <a href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a>
-	              <a href="#" onclick="priority('<%= job.jid %>', -25)">low</a>
-	            </ul>
-	          </div>
-	        </div>
+          <div style="margin-top: 7px;" class="text-right">
+            <input style="padding: 1px 12px; width: 110px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
+            <button class="btn btn-default dropdown-toggle" style="margin-top: -2px; border-top-left-radius: 0; border-bottom-left-radius: 0;" type="button" data-toggle="dropdown" aria-expanded="true">
+              <i class="caret"></i>
+            </button>
+            <ul class="dropdown-menu text-right" role="menu">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  25)">high</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>', -25)">low</a></li>
+            </ul>
+          </div>
 	      </div>
 	    </div>
 
 	    <% if not job.dependencies.empty? %>
 	    <div class="row">
-	      <div class="span12" style="margin-bottom: 10px">
+	      <div class="col-md-12" style="margin-bottom: 10px">
 	        <div style="float:left; margin-right: 10px"><h3>Dependencies:</h3></div>
 	        <% job.dependencies.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
-	            <i class="icon-remove"></i>
+	          <button class="btn btn-default" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
+	          <button class="btn btn-default dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
+	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
 	        <% end %>
@@ -71,13 +83,13 @@
 
 	    <% if not job.dependents.empty? %>
 	    <div class="row">
-	      <div class="span12" style="margin-bottom: 10px">
+	      <div class="col-md-12" style="margin-bottom: 10px">
 	        <div style="float:left; margin-right: 10px"><h3>Dependents:</h3></div>
 	        <% job.dependents.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
-	            <i class="icon-remove"></i>
+	          <button class="btn btn-default" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
+	          <button class="btn btn-default dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
+	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
 	        <% end %>
@@ -86,21 +98,22 @@
 	    <% end %>
 
 	    <div class="row">
-	      <div class="span12 tags" style="margin-bottom: 3px;">
+	      <div class="col-md-12 tags" style="margin-bottom: 3px;">
 	        <% job.tags.each do |tag| %>
-	        <div class="btn-group" style="float:left">
-            <span class="tag"><a href="<%= u "/tag/?tag=#{tag}" %>"><%= tag %></a></span>
-				    <button class="btn" onclick="untag('<%= job.jid %>', '<%= tag %>')">
-	            <i class="icon-remove"></i>
+	        <div class="btn-group" style="float:left; margin-right: 10px;">
+            <span class="tag" style="line-height: 24px;"><a href="<%= u "/tag/?tag=#{tag}" %>"><%= tag %></a></span>
+				    <button class="btn btn-default" onclick="untag('<%= job.jid %>', '<%= tag %>')">
+	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
 	        <% end %>
         
 	        <!-- One for adding new tags -->
 	        <div class="btn-group" style="float:left">
-	          <input class="span1 add-tag" type="text" placeholder="Add Tag" onchange="tag('<%= job.jid %>', $(this).val())"></input>
-				    <button class="btn" onclick="tag('<%= job.jid %>', $(this).parent().siblings().val())">
-	            <i class="icon-plus"></i>
+
+            <input style="padding: 1px 12px; width: 200px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Add tag" onchange="var v = $(this).val(); if (v.length > 0) { tag('<%= job.jid %>', v) }"></input>
+				    <button class="btn btn-default" onclick="tag('<%= job.jid %>', $(this).parent().siblings().val())">
+	            <i class="glyphicon glyphicon-plus"></i>
 	          </button>
 	        </div>
 	      </div>
@@ -108,11 +121,11 @@
 
 	    <% if not defined? brief %>
 	    <div class="row">
-	      <div class="span6">
+	      <div class="col-md-6">
 	        <h3><small>Data</small></h3>
 	        <pre style="overflow-y:scroll; height: 200px"><%= JSON.pretty_generate(job.data) %></pre>
 	      </div>
-	      <div class="span6">
+	      <div class="col-md-6">
 	        <h3><small>History</small></h3>
 	        <div style="overflow-y:scroll; height: 200px">
 	          <% job.queue_history.reverse.each do |h| %>
@@ -144,8 +157,8 @@
 
 	    <% if job.failure.length > 0 %>
 	    <div class="row">
-	      <div class="span12">
-	        <div class="alert alert-error">
+	      <div class="col-md-12">
+	        <div class="alert alert-danger">
 	          <p>In <strong><%= job.queue_name %></strong> on <strong><%= job.failure['worker'] %></strong>
 	            about <%= strftime(Time.at(job.failure['when'])) %></p>
 	          <pre><%= job.failure['message'].gsub('>', '&gt;').gsub('<', '&lt;') %></pre>
@@ -158,24 +171,24 @@
 	</div>
 <% else # Recurring job %>
 	<div class="row" id="job-<%= job.jid %>">
-	  <div class="span12">
+	  <div class="col-md-12">
 	    <div class="row">
-	      <div class="span6">
+	      <div class="col-md-6">
 	        <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
 	          <a href="<%= u "/jobs/#{job.jid}" %>"><%= job.jid[0..8] %>...</a> | <%= job.klass_name %>
 	        </h2>
 	      </div>
-	      <div class="span3">
+	      <div class="col-md-3">
 	        <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
 	          <strong>
 	            | recurring / <a href="<%= u "/queues/#{CGI::escape(job.queue_name)}" %>"><%= job.queue_name %></a>
 	          </strong>
 	        </h2>
 	      </div>
-	      <div class="span3">
+	      <div class="col-md-3">
 	        <div style="float:right; margin-top: 4px">
 	          <div class="btn-group">
-	            <button title="delete" class="btn btn-danger" onclick="confirmation(this, 'Delete?', function() { cancel('<%= job.jid %>', fade) })"><i class="icon-remove"></i></button>
+	            <button title="delete" class="btn btn-danger" onclick="confirmation(this, 'Delete?', function() { cancel('<%= job.jid %>', fade) })"><i class="glyphicon glyphicon-remove"></i></button>
 	            <button title="move" class="btn dropdown-toggle btn-success" data-toggle="dropdown">
 	              <i class="caret"></i>
 	            </button>
@@ -188,7 +201,7 @@
 	        </div>
 	        <div style="float:right; margin-right: 12px; margin-top: 4px">
 	          <div class="btn-group">
-	            <input class="span1 priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
+	            <input class="col-md-1 priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
       				<button class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="caret"></i>
               </button>
@@ -203,21 +216,21 @@
 	    </div>
       
 	    <div class="row">
-	      <div class="span12 tags" style="margin-bottom: 3px;">
+	      <div class="col-md-12 tags" style="margin-bottom: 3px;">
 	        <% job.tags.each do |tag| %>
 	        <div class="btn-group" style="float:left">
 	          <span class="tag"><%= tag %></span>
-				    <button class="btn" onclick="untag('<%= job.jid %>', '<%= tag %>')">
-	            <i class="icon-remove"></i>
+				    <button class="btn btn-default" onclick="untag('<%= job.jid %>', '<%= tag %>')">
+	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
 	        <% end %>
         
 	        <!-- One for adding new tags -->
 	        <div class="btn-group" style="float:left">
-	          <input class="span1 add-tag" type="text" placeholder="Add Tag" onchange="tag('<%= job.jid %>', $(this).val())"></input>
-				    <button class="btn" onclick="tag('<%= job.jid %>', $(this).parent().siblings().val())">
-	            <i class="icon-plus"></i>
+	          <input class="col-md-1 add-tag" type="text" placeholder="Add Tag" onchange="tag('<%= job.jid %>', $(this).val())"></input>
+				    <button class="btn btn-default" onclick="tag('<%= job.jid %>', $(this).parent().siblings().val())">
+	            <i class="glyphicon glyphicon-plus"></i>
 	          </button>
 	        </div>
 	      </div>
@@ -225,7 +238,7 @@
 
 	    <% if not defined? brief %>
 	    <div class="row">
-	      <div class="span12">
+	      <div class="col-md-12">
 	        <h3><small>Data</small></h3>
 	        <pre style="overflow-y:scroll; height: 200px"><%= JSON.pretty_generate(job.data) %></pre>
 	      </div>
