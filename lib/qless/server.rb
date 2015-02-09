@@ -476,10 +476,15 @@ module Qless
       if data["type"].nil?
         halt 400, "Need type"
       else
-        return json(client.jobs.failed(data['type'])['jobs'].map do |job|
-          job.move(job.queue_name)
-          { :id => job.jid, :queue => job.queue_name }
-        end)
+        data = []
+        while failed.any?
+          failed.each do |job|
+            job.move(job.queue_name)
+            data << { :id => job.jid, :queue => job.queue_name }
+          end
+          failed = client.jobs.failed(data['type'])['jobs']
+        end
+        return json(data)
       end
     end
 
