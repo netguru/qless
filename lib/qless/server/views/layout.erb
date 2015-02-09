@@ -230,14 +230,17 @@
         url: '<%= u "/tag" %>',
         data: data,
         success : function() {
-          var div  = $('<div>').attr('class', 'btn-group').attr('style', 'float:left');
-          var span = $('<span>').attr('class', 'tag').text(tag);
+          var div  = $('<div>').attr('class', 'btn-group').attr('style', 'float:left; margin-right: 10px;');
+          var span = $('<span>').attr('class', 'tag').attr('style', 'line-height: 24px;');
+          var a = $('a').attr('href', "/tag/?tag=" + tag).text(tag);
           var btn  = $('<button>').attr('class', 'btn btn-default').click(function() {
             untag(jid, tag);
           });
           btn.append($('<i>').attr('class', 'glyphicon glyphicon-remove'));
+          span.append(a);
           div.append(span).append(btn);
-          $('#job-' + jid.replace('.', '')).find('.add-tag').val(null).parent().before(div);
+          $('#job-' + jid.replace('.', '')).find('.add-tag input').val(null)
+          $('#job-' + jid.replace('.', '')).find('.tags').append(div);
           flash('Tagged ' + jid + ' with ' + tag, 'success', 1500);
         }, error: function() {
           flash('Failed to tag ' + jid + ' with ' + tag);
