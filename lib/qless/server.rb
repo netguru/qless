@@ -481,7 +481,7 @@ module Qless
         while failed.any?
           failed.each do |job|
             job.move(job.queue_name)
-            data << { :id => job.jid, :queue => job.queue_name }
+            response_data << { :id => job.jid, :queue => job.queue_name }
           end
           failed = client.jobs.failed(data['type'])['jobs']
         end
