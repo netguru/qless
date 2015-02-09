@@ -476,7 +476,7 @@ module Qless
       if data["type"].nil?
         halt 400, "Need type"
       else
-        data = []
+        response_data = []
         failed = client.jobs.failed(data['type'])['jobs']
         while failed.any?
           failed.each do |job|
@@ -485,7 +485,7 @@ module Qless
           end
           failed = client.jobs.failed(data['type'])['jobs']
         end
-        return json(data)
+        return json(response_data)
       end
     end
 
