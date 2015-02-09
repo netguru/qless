@@ -26,6 +26,10 @@ module Qless
     helpers do
       include Rack::Utils
 
+      def number_with_delimiter(number)
+        number.to_s.reverse.gsub(/...(?=.)/,'\&,').reverse
+      end
+
       def url_path(*path_parts)
         [ path_prefix, path_parts ].join("/").squeeze('/')
       end

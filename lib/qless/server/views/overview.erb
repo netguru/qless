@@ -40,12 +40,12 @@
         <% end %>
         <a href="<%= u "/queues/#{CGI::escape(queue['name'])}" %>"><%= queue['name'] %></a>
       </td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/running" %>"><%= queue['running'] %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/waiting" %>"><%= queue['waiting'] %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/scheduled" %>"><%= queue['scheduled'] %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/stalled" %>"><%= queue['stalled'] %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/depends" %>"><%= queue['depends'] %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/recurring" %>"><%= queue['recurring'] %></a></td>
+      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/running" %>"><%= number_with_delimiter(queue['running']) %></a></td>
+      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/waiting" %>"><%= number_with_delimiter(queue['waiting']) %></a></td>
+      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/scheduled" %>"><%= number_with_delimiter(queue['scheduled']) %></a></td>
+      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/stalled" %>"><%= number_with_delimiter(queue['stalled']) %></a></td>
+      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/depends" %>"><%= number_with_delimiter(queue['depends']) %></a></td>
+      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/recurring" %>"><%= number_with_delimiter(queue['recurring']) %></a></td>
     </tr>
   <% end %>
   </tbody>
@@ -68,7 +68,7 @@
     <% failed.sort_by { |t, count| -count }.each do |t, count| %>
     <tr class="failed-row">
       <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
-      <td><%= count %></td>
+      <td><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(count) %></a></td>
     </tr>
     <% end %>
     </tbody>
@@ -91,7 +91,7 @@
     <% counts.sort_by { |state, count| - count }.each do |state, count| %>
     <tr class="tracked-row">
       <td class="large-text"><a href="<%= u "/track##{state}" %>"><%= state %></a></td>
-      <td><%= count %></td>
+      <td><%= number_with_delimiter(count) %></td>
     </tr>
     <% end %>
     </tbody>
