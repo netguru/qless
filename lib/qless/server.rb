@@ -477,6 +477,7 @@ module Qless
         halt 400, "Need type"
       else
         data = []
+        failed = client.jobs.failed(data['type'])['jobs']
         while failed.any?
           failed.each do |job|
             job.move(job.queue_name)
