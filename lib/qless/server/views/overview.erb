@@ -97,27 +97,3 @@
     </tbody>
   </table>
 <% end %>
-
-<% if workers.any? %>
-  <div class="page-header">
-    <h1>Current Workers</h1>
-  </div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>running</th>
-        <th>stalled</th>
-      </tr>
-    </thead>
-    <tbody>
-    <% workers.each do |worker| %>
-    <tr class='worker-row'>
-      <td class="large-text"><a href="<%= u "/workers/#{worker['name']}" %>"><%= worker['name'] %></a></td>
-      <td><%= worker['jobs'] %></td>
-      <td><%= worker['stalled'] %></td>
-    </tr>
-    <% end %>
-    </tbody>
-  </table>
-<% end %>
