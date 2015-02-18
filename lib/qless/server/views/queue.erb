@@ -54,6 +54,11 @@
   <div class="col-md-8">
     <h2><a href="<%= u "/queues/#{CGI::escape(queue['name'])}" %>"><%= queue['name'] %></a>
     </h2>
+    <% if tab == 'waiting' %>
+      <div>Showing the first 20 waiting jobs</div>
+    <% else %>
+      <div>Showing the first 200 <%= tab %> jobs</div>
+    <% end %>
   </div>
 
   <div class="col-md-4">
