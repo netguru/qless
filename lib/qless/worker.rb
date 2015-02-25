@@ -88,7 +88,6 @@ module Qless
           unless job = reserve_job
             break if interval.zero?
             procline "Waiting for #{@job_reserver.description}"
-            log! "Sleeping for #{interval} seconds"
             sleep interval
             next
           end
@@ -262,7 +261,9 @@ module Qless
 
     def procline(value)
       $0 = "Qless-#{Qless::VERSION}: #{value} at #{Time.now.iso8601}"
-      log! $0
+      unless value =~ /^Waiting for/
+        log! $0
+      end
     end
 
     def wait_for_child
