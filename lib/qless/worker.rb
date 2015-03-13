@@ -260,9 +260,10 @@ module Qless
     end
 
     def procline(value)
-      $0 = "Qless: #{value} at #{Time.now.iso8601}"
+      title = "Qless: #{value} at #{Time.now.iso8601}"
+      Process.setproctitle(title)
       unless value =~ /^Waiting for/
-        log! $0
+        log! title
       end
     end
 
