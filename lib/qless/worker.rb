@@ -145,7 +145,7 @@ module Qless
           if @child
             wait_for_child
           else
-            procline "Single processing #{job.description}"
+            procline job.description
             perform(job, write_io)
           end
         end
@@ -260,7 +260,7 @@ module Qless
     end
 
     def procline(value)
-      $0 = "Qless-#{Qless::VERSION}: #{value} at #{Time.now.iso8601}"
+      $0 = "Qless: #{value} at #{Time.now.iso8601}"
       unless value =~ /^Waiting for/
         log! $0
       end
