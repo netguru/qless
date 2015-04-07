@@ -155,7 +155,7 @@ module Qless
       def strftime(t)
         # From http://stackoverflow.com/questions/195740/how-do-you-do-relative-time-in-rails
         diff_seconds = Time.now - t
-        formatted = t.strftime('%b %e, %Y %H:%M:%S')
+        formatted = t.strftime('%b %e, %Y %H:%M:%S %z')
         case diff_seconds
           when 0 .. 59
             "#{formatted} (#{diff_seconds.to_i} seconds ago)"
