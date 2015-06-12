@@ -282,7 +282,7 @@ module Qless
         end
       end
 
-      jobs = data["jobs"].map { |jid| client.jobs[jid] }
+      jobs = data["jobs"].map { |jid| client.jobs[jid] }.compact
 
       if status.length > 0
         jobs = jobs.select { |job| status.include? job.state }
