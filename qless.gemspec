@@ -11,9 +11,9 @@ Gem::Specification.new do |s|
   s.summary     = %q{A Redis-Based Queueing System}
   s.description = %q{
     `qless` is meant to be a performant alternative to other queueing
-    systems, with statistics collection, a browser interface, and 
+    systems, with statistics collection, a browser interface, and
     strong guarantees about job losses.
-    
+
     It's written as a collection of Lua scipts that are loaded into the
     Redis instance to be used, and then executed by the client library.
     As such, it's intended to be extremely easy to port to other languages,
@@ -34,9 +34,9 @@ Gem::Specification.new do |s|
 
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
-  
+
   s.add_dependency "redis", ">= 2.2"
-  
+
   s.add_development_dependency "sinatra"       , "~> 1.3.2"
   s.add_development_dependency "vegas"         , "~> 0.1.11"
   s.add_development_dependency "rspec"         , "~> 2.12"
