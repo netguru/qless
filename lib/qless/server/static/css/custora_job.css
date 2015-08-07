@@ -1,0 +1,46 @@
+@media only screen and (max-width: 767px) {
+  .custora-job-label {
+    margin-bottom: 5px;
+  }
+  .custora-job-id {
+    display: block;
+  }
+
+  .custora-job-button-group {
+    float: left;
+    margin-bottom: 10px;
+  }
+  .custora-job-button-group .dropdown-toggle {
+    width: 40px;
+  }
+  .custora-job-priority {
+    display: block;
+    width: 100%;
+  }
+
+  .custora-job-tags {
+    display: none;
+  }
+
+  .custora-job-tag-list {
+    display: block;
+    list-style: none;
+    padding-left: 0px;
+  }
+
+  .custora-job-tag-list span {
+    padding-top: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  pre.custora-job-failure {
+
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .custora-job-tag-list {
+    display: none;
+  }
+}
