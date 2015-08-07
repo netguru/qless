@@ -1,14 +1,14 @@
-<div class="page-header">
+<div class="page-header workers-header">
   <h1>Current Workers <small>And their job counts</small></h1>
 </div>
 
 <% workers.each do |worker| %>
 <div class="row">
   <div class="col-md-4">
-    <h3><a href="<%= u "/workers/#{worker['name']}" %>"><%= worker['name'] %></a></h3>
+    <h3 class="worker-header"><a class="worker-name" href="<%= u "/workers/#{worker['name']}" %>"><%= worker['name'] %></a></h3>
   </div>
   <div class="col-md-8">
-    <h3>| <%= worker['jobs'] %> / <%= worker['stalled'] %> <small>Running / Stalled</small></h3>
+    <h3 class="worker-job-header"> <%= worker['jobs'] %> / <%= worker['stalled'] %> <small>Running / Stalled</small></h3>
   </div>
 </div>
 <% end %>
