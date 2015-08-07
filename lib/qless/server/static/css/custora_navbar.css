@@ -1,0 +1,108 @@
+@media only screen and (max-width: 767px) {
+  .custora-toggle {
+    float: right;
+    height: 30px;
+    width: 30px;
+    margin-top: 10px;
+    margin-right: 10px;
+    background-image: url("../images/custora_navbar_toggle.png");
+    background-size: 30px 30px;
+    cursor: pointer;
+  }
+
+  .custora-logo {
+    display: inline-block;
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+    height: 30px;
+    width: 81px;
+    background-image: url("../images/custora_logo.png");
+    background-size: 81px 30px;
+  }
+
+  .custora-brand {
+    display: block;
+    float: none;
+    margin: 0 auto;
+    padding-top: 5px;
+    text-align: center;
+  }
+
+  .custora-navbar-item {
+    height:
+  }
+
+  #tag-search {
+    width: 67%;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .custora-navbar {
+    padding: 0px 20px;
+    height: 50px;
+  }
+  .custora-toggle {
+    display: none;
+  }
+  .custora-brand {
+    padding: 4px 10px;
+    float: left;
+  }
+}
+
+@media screen and (min-width: 970px) {
+  .custora-logo2 {
+    display: inline-block;
+    float: right;
+    margin-top: 10px;
+    margin-left: 10px;
+    height: 30px;
+    width: 81px;
+    background-image: url("../images/custora_logo.png");
+    background-size: 81px 30px;
+  }
+}
+
+.custora-navbar {
+  width: 100%;
+  background-color: rgb(200,237,251);
+}
+
+.custora-collapse {
+  border: none;
+  overflow: hidden;
+}
+
+.custora-brand {
+  color: rgb(162,162,162);
+  font-family: Antenna, sans-serif;
+  height: 50px;
+  font-size: 28px;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.custora-brand:hover,
+.custora-brand::selection,
+.custora-brand:visited,
+.custora-brand:active {
+  color: rgb(162,162,162);
+  text-decoration: none;
+}
+
+.custora-navbar-item {
+  cursor: pointer;
+  font-family: Antenna, sans-serif;
+  font-weight: bold;
+}
+
+.custora-navbar-item:hover {
+  background-color: rgb(146,220,248);
+}
+
+.custora-tag-search {
+  border: none;
+}

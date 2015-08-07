@@ -9,7 +9,7 @@
 
   <table class="table">
     <thead>
-      <tr>
+      <tr class="custora-row-headers">
         <th></th>
         <th>running</th>
         <th>waiting</th>
@@ -40,12 +40,22 @@
         <% end %>
         <a href="<%= u "/queues/#{CGI::escape(queue['name'])}" %>"><%= queue['name'] %></a>
       </td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/running" %>"><%= number_with_delimiter(queue['running']) %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/waiting" %>"><%= number_with_delimiter(queue['waiting']) %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/scheduled" %>"><%= number_with_delimiter(queue['scheduled']) %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/stalled" %>"><%= number_with_delimiter(queue['stalled']) %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/depends" %>"><%= number_with_delimiter(queue['depends']) %></a></td>
-      <td><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/recurring" %>"><%= number_with_delimiter(queue['recurring']) %></a></td>
+      <td class="custora-std-queue-counts"><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/running" %>"><%= number_with_delimiter(queue['running']) %></a></td>
+      <td class="custora-std-queue-counts"><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/waiting" %>"><%= number_with_delimiter(queue['waiting']) %></a></td>
+      <td class="custora-std-queue-counts"><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/scheduled" %>"><%= number_with_delimiter(queue['scheduled']) %></a></td>
+      <td class="custora-std-queue-counts"><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/stalled" %>"><%= number_with_delimiter(queue['stalled']) %></a></td>
+      <td class="custora-std-queue-counts"><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/depends" %>"><%= number_with_delimiter(queue['depends']) %></a></td>
+      <td class="custora-std-queue-counts"><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/recurring" %>"><%= number_with_delimiter(queue['recurring']) %></a></td>
+      <tr class="custora-mobile-queue-counts"><td>
+        <ul>
+          <li><div class="custora-label">Running</div><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/running" %>"><%= number_with_delimiter(queue['running']) %></a></li>
+          <li><div class="custora-label">Waiting</div><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/waiting" %>"><%= number_with_delimiter(queue['waiting']) %></a></li>
+          <li><div class="custora-label">Scheduled</div><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/scheduled" %>"><%= number_with_delimiter(queue['scheduled']) %></a></li>
+          <li><div class="custora-label">Stalled</div><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/stalled" %>"><%= number_with_delimiter(queue['stalled']) %></a></li>
+          <li><div class="custora-label">Depends</div><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/depends" %>"><%= number_with_delimiter(queue['depends']) %></a></li>
+          <li><div class="custora-label">Recurring</div><a href="<%= u "/queues/#{CGI::escape(queue['name'])}/recurring" %>"><%= number_with_delimiter(queue['recurring']) %></a></li>
+        </ul>
+      </td></tr>
     </tr>
   <% end %>
   </tbody>
@@ -58,7 +68,7 @@
   </div>
 
   <table class="table">
-    <thead>
+    <thead class="failure-headers">
       <tr>
         <th>failure</th>
         <th>count</th>
@@ -68,7 +78,11 @@
     <% failed.sort_by { |t, count| -count }.each do |t, count| %>
     <tr class="failed-row">
       <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
-      <td><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(count) %></a></td>
+      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(count) %></a></td>
+    </tr>
+    <tr class="failed-row-mobile">
+      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(count) %></a></td>
+      <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
     </tr>
     <% end %>
     </tbody>
@@ -80,7 +94,7 @@
     <h1>Tracked Jobs</h1>
   </div>
   <% counts = Hash.new; tracked['jobs'].each { |job| counts[job.state] ||= 0; counts[job.state] += 1 } %>
-  <table class="table">
+  <table class="table tracked-table">
     <thead>
       <tr>
         <th>state</th>
