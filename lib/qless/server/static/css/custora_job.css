@@ -34,8 +34,8 @@
     cursor: pointer;
   }
 
-  pre.custora-job-failure {
-
+  h3.depends-header {
+    font-size: 16px;
   }
 }
 

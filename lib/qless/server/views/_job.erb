@@ -68,15 +68,15 @@
 	    <% if not job.dependencies.empty? %>
 	    <div class="row">
 	      <div class="col-md-12" style="margin-bottom: 10px">
-	        <div style="float:left; margin-right: 10px"><h3>Dependencies:</h3></div>
-	        <% job.dependencies.each do |jid| %>
+	        <div style="float:left; margin-right: 10px"><h3 class="depends-header">Dependencies (<%= job.dependencies.count %>):</h3></div>
+					<% job.dependencies.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>">
 	          <button class="btn btn-default" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
 	          <button class="btn btn-default dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
 	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
-	        <% end %>
+					<% end %>
 	      </div>
 	    </div>
 	    <% end %>
@@ -84,9 +84,11 @@
 	    <% if not job.dependents.empty? %>
 	    <div class="row">
 	      <div class="col-md-12" style="margin-bottom: 10px">
-	        <div style="float:left; margin-right: 10px"><h3>Dependents (<%= job.dependents.count %>) :</h3></div>
-	        <% job.dependents.each do |jid| %>
-	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
+	        <div style="float:left; margin-right: 10px">
+						<h3 class="depends-header">Dependents (<%= job.dependents.count %>):</h3>
+					</div>
+					<% job.dependents.each do |jid| %>
+	        <div class="btn-group" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
 	          <button class="btn btn-default" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
 	          <button class="btn btn-default dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
 	            <i class="glyphicon glyphicon-remove"></i>
