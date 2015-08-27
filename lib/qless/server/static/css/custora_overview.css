@@ -1,0 +1,105 @@
+@media only screen and (max-width: 767px) {
+  .page-header {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    padding: 0px 0px;
+    border: none;
+  }
+
+  .page-header h1 {
+    font-family: Antenna, sans-serif;
+    font-size: 22px;
+  }
+
+  body > div.container {
+    width: 80%;
+    margin: 0 0 0 10px;
+  }
+
+  .custora-row-headers {
+    display: none;
+  }
+
+  .table {
+    box-sizing: content-box;
+    margin-bottom: 5px;
+  }
+
+  .table > tbody > tr > td > button {
+    height: 20px;
+    width: 20px;
+    padding: 0px 0px 0px 1px;
+  }
+
+  .custora-queue-column {
+    max-width: 100px;
+    min-width: 50px;
+  }
+
+  .table .queue-column a {
+    font-weight: bold;
+    margin-left: 5px;
+  }
+
+  .custora-label {
+    box-sizing: content-box;
+    width: 90px;
+    float: left;
+    margin-right: 20px;
+  }
+
+  .custora-mobile-queue-counts > td > ul {
+    padding: 0px 0px 0px 0px;
+    font-size: 16px;
+    list-style: none;
+  }
+
+  .custora-mobile-queue-counts > td > ul > li {
+    width: 120px;
+    border-bottom: 1px dotted #ccc;
+  }
+
+  .custora-std-queue-counts {
+    display: none;
+  }
+
+  .failure-headers {
+    display: none;
+  }
+
+  .failed-row-mobile {
+    display: block;
+  }
+
+  .failed-row-mobile .large-text {
+    font-size: 14px;
+    overflow: scroll;
+  }
+
+  .failed-row {
+    display: none;
+  }
+
+  .tracked-table thead {
+    display: none;
+  }
+
+  .tracked-row td {
+    font-size: 16px;
+  }
+
+  .tracked-row .large-text {
+    width: 110px;
+    padding-right: none;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .failed-row-mobile {
+    display: none;
+  }
+
+  .custora-mobile-queue-counts {
+    display: none;
+  }
+}
