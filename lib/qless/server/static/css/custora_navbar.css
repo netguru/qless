@@ -13,12 +13,13 @@
   .custora-logo {
     display: inline-block;
     float: left;
-    margin-top: 10px;
+    margin-top: 18px;
     margin-left: 10px;
     height: 30px;
-    width: 81px;
+    width: 100px;
     background-image: url("../images/custora_logo.png");
-    background-size: 81px 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   .custora-brand {
@@ -57,12 +58,13 @@
   .custora-logo2 {
     display: inline-block;
     float: right;
-    margin-top: 10px;
+    margin-top: 16px;
     margin-left: 10px;
     height: 30px;
     width: 81px;
     background-image: url("../images/custora_logo.png");
-    background-size: 81px 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
 
