@@ -272,7 +272,7 @@ module Qless
       status = (params[:status] || "").split(",")
       tag = params[:tag]
 
-      data = client.jobs.tagged(tag, 0, 500)
+      data = client.jobs.tagged(tag, 0, status.length > 0 ? 10_000 : 500)
 
       if data.is_a?(Hash)
         if data.any?
@@ -285,7 +285,8 @@ module Qless
       jobs = data["jobs"].map { |jid| client.jobs[jid] }.compact
 
       if status.length > 0
-        jobs = jobs.select { |job| status.include? job.state }
+        jobs = jobs.compact.select { |job| status.include?(job.state) }
+        data['page_count'] = (jobs.length / PAGE_SIZE.to_f).ceil
       end
 
       start = (current_page - 1) * PAGE_SIZE
