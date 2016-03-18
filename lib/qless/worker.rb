@@ -73,6 +73,18 @@ module Qless
       new(reserver, options).work(interval)
     end
 
+    def self.create_for_queues(queues, client, options)
+      queues = queues.to_s.split(',').map { |q| client.queues[q.strip] }
+
+      if queues.none?
+        raise "No queues provided. You must pass queues when starting a worker."
+      end
+
+      reserver = JobReservers::Ordered.new(queues)
+
+      new(reserver, options)
+    end
+
     def work(interval = 5.0)
       procline "Starting #{@job_reserver.description}"
       register_parent_signal_handlers
@@ -457,4 +469,3 @@ module Qless
     end
   end
 end
-
