@@ -389,7 +389,7 @@ module Qless
 
       yield
     ensure
-      subscribers.each(&:stop)
+      subscribers && subscribers.each(&:stop)
     end
 
     def start_parent_pub_sub_listener_for(client)
