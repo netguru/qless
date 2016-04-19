@@ -135,7 +135,7 @@
 	      </div>
 	      <div class="col-md-6">
 	        <h3><small>Context</small></h3>
-					<% if job.data["context"] %>
+					<% if job.data["context"] && job.data["context"].is_a?(Array) %>
 						<pre><%= job.data["context"].last %></pre>
 					<% end %>
 	        <h3><small>History</small></h3>
