@@ -8,7 +8,7 @@ module Qless
     end
 
     def initialize
-      @backtrace_replacements = { Dir.pwd => '.' }
+      @backtrace_replacements = { ENV['PWD'] || Dir.pwd => '.' }
       @backtrace_replacements[ENV['GEM_HOME']] = '<GEM_HOME>' if ENV.has_key?('GEM_HOME')
     end
 
@@ -37,4 +37,3 @@ module Qless
     end
   end
 end
-
