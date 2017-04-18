@@ -141,7 +141,7 @@
 	    <div class="row">
 	      <div class="col-md-6">
           <h3><small>Data</small></h3>
-					<pre style="overflow-y:scroll; height: 400px"><%= JSON.pretty_generate(job.data) %></pre>
+					<pre style="overflow-y:scroll; height: 400px"><%= JSON.pretty_generate(job.data).gsub(/</, '&lt;') %></pre>
 	      </div>
 	      <div class="col-md-6">
 	        <h3><small>Context</small></h3>
@@ -262,7 +262,7 @@
 	    <div class="row">
 	      <div class="col-md-12">
 	        <h3><small>Data</small></h3>
-	        <pre style="overflow-y:scroll; height: 200px"><%= JSON.pretty_generate(job.data) %></pre>
+	        <pre style="overflow-y:scroll; height: 200px"><%= JSON.pretty_generate(job.data).gsub(/</, '&lt;') %></pre>
 	      </div>
 	    </div>
 	    <% end %>
