@@ -1,6 +1,6 @@
 <% if job.instance_of?(Qless::Job) %>
 	<div class="hidden" id="job-json-<%= job.jid %>">
-		<%= job.to_hash.to_json %>
+		<%= job.to_hash.to_json.gsub(/</, '&lt;') %>
 	</div>
 	<div class="row" id="job-<%= job.jid.gsub('.', '') %>">
 	  <div class="col-md-12">
