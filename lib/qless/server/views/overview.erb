@@ -66,10 +66,14 @@
 <% failed_not_in_pt = failed_jobs[:not_tagged] %>
 <% failed_in_pt = failed_jobs[:tagged] %>
 
-<% if failed_not_in_pt.any? %>
+<% if failed_in_pt.any? || failed_not_in_pt.any? %>
   <div class="page-header">
-    <h1>Failed Jobs <small>Not in Pivotal</small></h1>
+    <h1>Failed Jobs</h1>
   </div>
+<% end %>
+
+<% if failed_not_in_pt.any? %>
+  <h2>Not In Pivotal</h2>
 
   <table class="table">
     <thead class="failure-headers">
@@ -94,9 +98,7 @@
 <% end %>
 
 <% if failed_in_pt.any? %>
-  <div class="page-header">
-    <h1>Failed Jobs <small>In Pivotal</small></h1>
-  </div>
+  <h2>In Pivotal</h2>
 
   <table class="table">
     <thead class="failure-headers">
