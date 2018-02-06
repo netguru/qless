@@ -62,9 +62,13 @@
 </table>
 <% end %>
 
-<% if failed.any? %>
+<% failed_jobs = failed_jobs_by_type(tagged: /^pt-/) %>
+<% failed_not_in_pt = failed_jobs[:not_tagged] %>
+<% failed_in_pt = failed_jobs[:tagged] %>
+
+<% if failed_not_in_pt.any? %>
   <div class="page-header">
-    <h1>Failed Jobs</h1>
+    <h1>Failed Jobs <small>Not in Pivotal</small></h1>
   </div>
 
   <table class="table">
@@ -75,13 +79,40 @@
       </tr>
     </thead>
     <tbody>
-    <% failed.sort_by { |t, count| -count }.each do |t, count| %>
+    <% failed_not_in_pt.sort_by { |t, jobs| -jobs.count }.each do |t, jobs| %>
     <tr class="failed-row">
       <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
-      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(count) %></a></td>
+      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(jobs.count) %></a></td>
     </tr>
     <tr class="failed-row-mobile">
-      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(count) %></a></td>
+      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(jobs.count) %></a></td>
+      <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if failed_in_pt.any? %>
+  <div class="page-header">
+    <h1>Failed Jobs <small>In Pivotal</small></h1>
+  </div>
+
+  <table class="table">
+    <thead class="failure-headers">
+      <tr>
+        <th>failure</th>
+        <th>count</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% failed_in_pt.sort_by { |t, jobs| -jobs.count }.each do |t, jobs| %>
+    <tr class="failed-row">
+      <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
+      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(jobs.count) %></a></td>
+    </tr>
+    <tr class="failed-row-mobile">
+      <td class="failed-count"><a href="<%= u "/failed/#{t}" %>"><%= number_with_delimiter(jobs.count) %></a></td>
       <td class="large-text"><a href="<%= u "/failed/#{t}" %>"><%= t %></a></td>
     </tr>
     <% end %>
