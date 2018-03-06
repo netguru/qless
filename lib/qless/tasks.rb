@@ -1,10 +1,5 @@
-namespace :qless do
-  task :setup # no-op; users should define their own setup
-
-  desc "Start a Qless worker using env vars: QUEUES, JOB_RESERVER, REDIS_URL, INTERVAL, VERBOSE, VVERBOSE"
-  task :work => :setup do
-    require 'qless/worker'
-    Qless::Worker.start
-  end
-end
-
+# Encoding: utf-8
+warn "Qless tasks are deprecated (they haven't worked for " \
+     "quite some time) and you should start a worker by " \
+     "writing a bit of ruby code that instantiates and " \
+     "runs a worker instead."
