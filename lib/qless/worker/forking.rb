@@ -4,6 +4,7 @@
 require 'qless'
 require 'qless/worker/base'
 require 'qless/worker/serial'
+require 'qless/job_reservers/ordered'
 require 'thread'
 
 module Qless
