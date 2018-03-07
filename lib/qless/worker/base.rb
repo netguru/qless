@@ -45,15 +45,6 @@ module Qless
         on_current_job_lock_lost { shutdown(in_signal_handler=false) }
       end
 
-      def self.create_for_queues(queues, client, options)
-        queues = queues.to_s.split(',').map { |q| client.queues[q.strip] }
-        if queues.none?
-          raise "No queues provided. You must pass queues when starting a worker."
-        end
-        reserver = JobReservers::Ordered.new(queues)
-        new(reserver, options)
-      end
-
       def log_level
         @log.level
       end
