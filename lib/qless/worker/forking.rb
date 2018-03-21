@@ -4,7 +4,6 @@
 require 'qless'
 require 'qless/worker/base'
 require 'qless/worker/serial'
-require 'qless/job_reservers/ordered'
 require 'thread'
 
 module Qless
@@ -12,15 +11,6 @@ module Qless
     class ForkingWorker < BaseWorker
       # The child startup interval
       attr_accessor :max_startup_interval
-
-      def self.create_for_queues(queues, client, options)
-        queues = queues.to_s.split(',').map { |q| client.queues[q.strip] }
-        if queues.none?
-          raise "No queues provided. You must pass queues when starting a worker."
-        end
-        reserver = JobReservers::Ordered.new(queues)
-        new(reserver, options)
-      end
 
       def initialize(reserver, options = {})
         super(reserver, options)

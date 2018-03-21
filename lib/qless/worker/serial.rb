@@ -3,11 +3,21 @@
 # Qless requires
 require 'qless'
 require 'qless/worker/base'
+require 'qless/job_reservers/ordered'
 
 module Qless
   module Workers
     # A worker that keeps popping off jobs and processing them
     class SerialWorker < BaseWorker
+      def self.create_for_queues(queues, client, options)
+        queues = queues.to_s.split(',').map { |q| client.queues[q.strip] }
+        if queues.none?
+          raise "No queues provided. You must pass queues when starting a worker."
+        end
+        reserver = JobReservers::Ordered.new(queues)
+        new(reserver, options)
+      end
+
       def initialize(reserver, options = {})
         super(reserver, options)
       end
