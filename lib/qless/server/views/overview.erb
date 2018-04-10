@@ -121,26 +121,3 @@
     </tbody>
   </table>
 <% end %>
-
-<% if tracked['jobs'].any? %>
-  <div class="page-header">
-    <h1>Tracked Jobs</h1>
-  </div>
-  <% counts = Hash.new; tracked['jobs'].each { |job| counts[job.state] ||= 0; counts[job.state] += 1 } %>
-  <table class="table tracked-table">
-    <thead>
-      <tr>
-        <th>state</th>
-        <th>count</th>
-      </tr>
-    </thead>
-    <tbody>
-    <% counts.sort_by { |state, count| - count }.each do |state, count| %>
-    <tr class="tracked-row">
-      <td class="large-text"><a href="<%= u "/track##{state}" %>"><%= state %></a></td>
-      <td><%= number_with_delimiter(count) %></td>
-    </tr>
-    <% end %>
-    </tbody>
-  </table>
-<% end %>
