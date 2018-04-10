@@ -125,29 +125,6 @@ module Qless
         return client.jobs.failed
       end
 
-      def failed_jobs_by_type(tagged: nil, include_not_tagged: true)
-        jobs = client.jobs.failed.map { |k, v| [k, client.jobs.failed(k)["jobs"]] }.to_h
-
-        tagged_jobs = if tagged
-          jobs.
-            transform_values { |v| v.select { |job| res = job.tags.grep(tagged); res && res.count > 0 } }.
-            select { |k, v| v.length > 0 }
-        else
-          jobs
-        end
-
-        if include_not_tagged && tagged
-          {
-            tagged: tagged_jobs,
-            not_tagged: jobs.
-              transform_values { |v| v.select { |job| res = job.tags.grep(tagged); res && res.count == 0 } }.
-              select { |k, v| v.length > 0 },
-          }
-        else
-          tagged_jobs
-        end
-      end
-
       # Return the supplied object back as JSON
       def json(obj)
         content_type :json
