@@ -1,5 +1,3 @@
-# Encoding: utf-8
-
 module Qless
   module JobReservers
     class Ordered
@@ -17,12 +15,8 @@ module Qless
         nil
       end
 
-      def prep_for_work!
-        # nothing here on purpose
-      end
-
       def description
-        @description ||= @queues.map(&:name).join(', ') + ' (ordered)'
+        @description ||= @queues.map(&:name).join(', ') + " (ordered)"
       end
     end
   end

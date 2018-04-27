@@ -1,5 +1,3 @@
-# Encoding: utf-8
-
 require 'spec_helper'
 require 'qless/job'
 
@@ -16,43 +14,43 @@ module Qless
       end
     end
 
-    let(:client) { double('client').as_null_object }
+    let(:client) { stub.as_null_object }
 
-    describe '.build' do
+    describe ".build" do
       it 'creates a job instance' do
         Job.build(client, JobClass).should be_a(Job)
       end
 
       it 'honors attributes passed as a symbol' do
-        job = Job.build(client, JobClass, data: { 'a' => 5 })
-        job.data.should eq('a' => 5)
+        job = Job.build(client, JobClass, data: { "a" => 5 })
+        job.data.should eq("a" => 5)
       end
 
-      it 'round-trips data through JSON to mimic real jobs' do
+      it 'round-trips the data through JSON to simulate what happens with real jobs' do
         time = Time.new(2012, 5, 3, 12, 30)
-        job = Job.build(client, JobClass, data: { a: 5, timestamp: time })
+        job = Job.build(client, JobClass, data: { :a => 5, :timestamp => time })
         job.data.keys.should =~ %w[ a timestamp ]
-        job.data['timestamp'].should be_a(String)
-        job.data['timestamp'].should include('2012-05-03')
+        job.data["timestamp"].should be_a(String)
+        job.data["timestamp"].should include("2012-05-03")
       end
     end
 
-    describe '#klass' do
+    describe "#klass" do
       it 'returns the class constant' do
         job = Job.build(client, JobClass, data: {})
         expect(job.klass).to be(JobClass)
       end
 
       it 'raises a useful error when the class constant is not loaded' do
-        stub_const('MyJobClass', Class.new)
+        stub_const("MyJobClass", Class.new)
         job = Job.build(client, ::MyJobClass, data: {})
-        hide_const('MyJobClass')
+        hide_const("MyJobClass")
         expect { job.klass }.to raise_error(NameError, /constant MyJobClass/)
       end
     end
 
-    describe '#perform' do
-      it 'calls #perform method on the job class with job as an argument' do
+    describe "#perform" do
+      it 'calls the #perform method on the job class with the job as an argument' do
         job = Job.build(client, JobClass)
         JobClass.should_receive(:perform).with(job).once
         job.perform
@@ -65,9 +63,9 @@ module Qless
       end
 
       context 'when the job class is a Qless::Job::SupportsMiddleware' do
-        it 'calls #around_perform on the job to run the middleware chain' do
+        it 'calls #around_perform on the job in order to run the middleware chain' do
           klass = Class.new { extend Qless::Job::SupportsMiddleware }
-          stub_const('MyJobClass', klass)
+          stub_const("MyJobClass", klass)
 
           job = Job.build(client, klass)
           klass.should_receive(:around_perform).with(job).once
@@ -75,22 +73,20 @@ module Qless
         end
       end
 
-      context('when the job mixes in middleware but forgot' +
-        'Qless::Job::SupportsMiddleware') do
-        it('raises an error to alert the user to the fact they need' +
-          'Qless::Job::SupportsMiddleware') do
+      context 'when the job mixes in a middleware but has forgotten Qless::Job::SupportsMiddleware' do
+        it 'raises an error to alert the user to the fact they need Qless::Job::SupportsMiddleware' do
           klass = Class.new { extend SomeJobMiddleware }
           stub_const('MyJobClass', klass)
           job = Job.build(client, klass)
 
-          expect do
+          expect {
             job.perform
-          end.to raise_error(Qless::Job::MiddlewareMisconfiguredError)
+          }.to raise_error(Qless::Job::MiddlewareMisconfiguredError)
         end
       end
     end
 
-    describe '#middlewares_on' do
+    describe "#middlewares_on" do
       it 'returns the list of middleware mixed into the job' do
         klass = Class.new do
           extend Qless::Job::SupportsMiddleware
@@ -103,49 +99,49 @@ module Qless
       end
     end
 
-    shared_examples_for 'a method that calls lua' do |error, method, *args|
+    shared_examples_for "a method that calls a lua method" do |error, method, *args|
       it "raises a #{error} if a lua error is raised" do
-        client.stub(:call) do |command, *a|
+        client.stub(:call) do |command, *args|
           expect(command).to eq(method.to_s)
-          raise LuaScriptError.new('failed')
+          raise LuaScriptError.new("failed")
         end
 
         job = Job.build(client, Qless::Job)
 
-        expect do
+        expect {
           job.public_send(method, *args)
-        end.to raise_error(error, 'failed')
+        }.to raise_error(error, "failed")
       end
 
       it 'allows other errors to propagate' do
-        client.stub(:call) do |command, *a|
+        client.stub(:call) do |command, *args|
           expect(command).to eq(method.to_s)
           raise NoMethodError
         end
 
         job = Job.build(client, Qless::Job)
 
-        expect do
+        expect {
           job.public_send(method, *args)
-        end.to raise_error(NoMethodError)
+        }.to raise_error(NoMethodError)
       end
     end
 
-    describe '#complete' do
-      include_examples 'a method that calls lua',
-                       Job::CantCompleteError, :complete
+    describe "#complete" do
+      include_examples "a method that calls a lua method",
+        Job::CantCompleteError, :complete
     end
 
-    describe '#fail' do
-      include_examples 'a method that calls lua',
-                       Job::CantFailError, :fail, 'group', 'message'
+    describe "#fail" do
+      include_examples "a method that calls a lua method",
+        Job::CantFailError, :fail, "group", "message"
     end
 
     [
      [:fail, 'group', 'message'],
      [:complete],
      [:cancel],
-     [:requeue, 'queue'],
+     [:move, 'queue'],
      [:retry],
      [:retry, 55]
     ].each do |meth, *args|
@@ -153,19 +149,19 @@ module Qless
         let(:job) { Job.build(client, JobClass) }
 
         it 'updates #state_changed? from false to true' do
-          expect do
+          expect {
             job.send(meth, *args)
-          end.to change(job, :state_changed?).from(false).to(true)
+          }.to change(job, :state_changed?).from(false).to(true)
         end
 
         class MyCustomError < StandardError; end
 
-        it 'does not update #state_changed? if redis connection error' do
-          client.stub(:call) { raise MyCustomError, 'boom' }
+        it 'does not update #state_changed? if there is a redis connection error' do
+          client.stub(:call) { raise MyCustomError, "boom" }
 
-          expect do
+          expect {
             job.send(meth, *args)
-          end.to raise_error(MyCustomError)
+          }.to raise_error(MyCustomError)
 
           job.state_changed?.should be_false
         end
@@ -193,44 +189,41 @@ module Qless
       end
     end
 
-    describe '#to_hash' do
-      it 'returns out the state of the job' do
-        job = Job.build(client, JobClass, 'spawned_from_jid' => 'foo')
+    describe "#to_hash" do
+      let(:job) { Job.build(client, JobClass) }
 
-        expect(job.to_hash).to include(
-          klass_name: "Qless::JobClass",
-          state: "running",
-          spawned_from_jid: "foo"
-        )
+      it "prints out the state of the job" do
+        hash = job.to_hash
+        hash[:klass_name].should eq("Qless::JobClass")
+        hash[:state].should eq("running")
       end
     end
 
-    describe '#inspect' do
+    describe "#inspect" do
       let(:job) { Job.build(client, JobClass) }
 
-      it 'includes the jid' do
+      it "includes the jid" do
         job.inspect.should include(job.jid)
       end
 
-      it 'includes the job class' do
+      it "includes the job class" do
         job.inspect.should include(job.klass_name)
       end
 
-      it 'includes the job queue' do
+      it "includes the job queue" do
         job.inspect.should include(job.queue_name)
       end
     end
 
-    describe 'history methods' do
+    describe "history methods" do
       let(:time_1) { Time.utc(2012, 8, 1, 12, 30) }
       let(:time_2) { Time.utc(2012, 8, 1, 12, 31) }
 
       let(:history_event) do
-        {
-          'popped' => time_2.to_i,
-          'put'    => time_1.to_f,
-          'q'      => 'test_error',
-          'worker' => 'Myrons-Macbook-Pro.local-44396' }
+        {'popped' => time_2.to_i,
+         'put'    => time_1.to_f,
+         'q'      => 'test_error',
+         'worker' => 'Myrons-Macbook-Pro.local-44396'}
       end
 
       let(:job) do
@@ -257,7 +250,7 @@ module Qless
       end
     end
 
-    describe '#initially_put_at' do
+    describe "#initially_put_at" do
       let(:time_1) { Time.utc(2012, 8, 1, 12, 30) }
       let(:time_2) { Time.utc(2012, 8, 1, 12, 31) }
 
@@ -278,52 +271,6 @@ module Qless
         expect(job.initially_put_at).to eq(time_1)
       end
     end
-
-    describe "equality" do
-      it 'is considered equal when the qless client and jid are equal' do
-        job1 = Qless::Job.build(client, JobClass, jid: "foo")
-        job2 = Qless::Job.build(client, JobClass, jid: "foo")
-
-        expect(job1 == job2).to eq(true)
-        expect(job2 == job1).to eq(true)
-        expect(job1.eql? job2).to eq(true)
-        expect(job2.eql? job1).to eq(true)
-
-        expect(job1.hash).to eq(job2.hash)
-      end
-
-      it 'is not considered equal when the jid differs' do
-        job1 = Qless::Job.build(client, JobClass, jid: "foo")
-        job2 = Qless::Job.build(client, JobClass, jid: "food")
-
-        expect(job1 == job2).to eq(false)
-        expect(job2 == job1).to eq(false)
-        expect(job1.eql? job2).to eq(false)
-        expect(job2.eql? job1).to eq(false)
-
-        expect(job1.hash).not_to eq(job2.hash)
-      end
-
-      it 'is not considered equal when the client differs' do
-        job1 = Qless::Job.build(client, JobClass, jid: "foo")
-        job2 = Qless::Job.build(double, JobClass, jid: "foo")
-
-        expect(job1 == job2).to eq(false)
-        expect(job2 == job1).to eq(false)
-        expect(job1.eql? job2).to eq(false)
-        expect(job2.eql? job1).to eq(false)
-
-        expect(job1.hash).not_to eq(job2.hash)
-      end
-
-      it 'is not considered equal to other types of objects' do
-        job1 = Qless::Job.build(client, JobClass, jid: "foo")
-        job2 = Class.new(Qless::Job).build(client, JobClass, jid: "foo")
-
-        expect(job1 == job2).to eq(false)
-        expect(job1.eql? job2).to eq(false)
-        expect(job1.hash).not_to eq(job2.hash)
-      end
-    end
   end
 end
+

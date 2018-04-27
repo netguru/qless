@@ -81,9 +81,9 @@
 	        <div style="float:left; margin-right: 10px"><h3 class="depends-header">Dependencies (<%= job.dependencies.count %>):</h3></div>
 					<% job.dependencies.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
-	            <i class="icon-remove"></i>
+	          <button class="btn btn-default" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
+	          <button class="btn btn-default dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
+	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
 					<% end %>
@@ -93,15 +93,15 @@
 
 	    <% if not job.dependents.empty? %>
 	    <div class="row">
-	      <div class="span12" style="margin-bottom: 10px">
+	      <div class="col-md-12" style="margin-bottom: 10px">
 	        <div style="float:left; margin-right: 10px">
 						<h3 class="depends-header">Dependents (<%= job.dependents.count %>):</h3>
 					</div>
-	        <% job.dependents.each do |jid| %>
-	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
-	            <i class="icon-remove"></i>
+					<% job.dependents.each do |jid| %>
+	        <div class="btn-group" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
+	          <button class="btn btn-default" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')"><%= jid[0...8] %>...</button>
+	          <button class="btn btn-default dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
+	            <i class="glyphicon glyphicon-remove"></i>
 	          </button>
 	        </div>
 	        <% end %>
@@ -197,13 +197,13 @@
 	    <div class="row">
 	      <div class="col-md-6">
 	        <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
-	          <a href="<%= u "/jobs/#{job.jid}" %>" title="<%= job.jid %>"><%= job.jid[0..8] %>...</a> | <span title="<%= job.klass_name %>"><%= job.klass_name %></span>
+	          <a href="<%= u "/jobs/#{job.jid}" %>"><%= job.jid[0..8] %>...</a> | <%= job.klass_name %>
 	        </h2>
 	      </div>
 	      <div class="col-md-3">
 	        <h2 style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
 	          <strong>
-	            | recurring / <a href="<%= u "/queues/#{CGI::escape(job.queue_name)}" %>" title="<%= job.queue_name %>"><%= job.queue_name %></a>
+	            | recurring / <a href="<%= u "/queues/#{CGI::escape(job.queue_name)}" %>"><%= job.queue_name %></a>
 	          </strong>
 	        </h2>
 	      </div>
