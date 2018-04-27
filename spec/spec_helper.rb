@@ -1,5 +1,3 @@
-# Encoding: utf-8
-
 begin
   # use `bundle install --standalone' to get this...
   require_relative '../bundle/bundler/setup'
@@ -23,46 +21,25 @@ module QlessSpecHelpers
     end
   end
 
+  def redis_config
+    @redis_config ||= if File.exist?('./spec/redis.config.yml')
+      YAML.load_file('./spec/redis.config.yml')
+    else
+      {}
+    end
+  end
+
+  def redis_url
+    return "redis://localhost:6379/0" if redis_config.empty?
+    "redis://#{redis_config[:host]}:#{redis_config[:port]}/#{redis_config.fetch(:db, 0)}"
+  end
+
   def clear_qless_memoization
     Qless.instance_eval do
       instance_variables.each do |ivar|
         remove_instance_variable(ivar)
       end
     end
-  end
-end
-
-require 'yaml'
-
-module RedisHelpers
-  extend self
-
-  def redis_config
-    return @redis_config unless @redis_config.nil?
-    if File.exist?('./spec/redis.config.yml')
-      @redis_config = YAML.load_file('./spec/redis.config.yml')
-    else
-      @redis_config = {}
-    end
-  end
-
-  def redis_url
-    return 'redis://localhost:6379/0' if redis_config.empty?
-    c = redis_config
-    "redis://#{c[:host]}:#{c[:port]}/#{c.fetch(:db, 0)}"
-  end
-
-  def new_client
-    Qless::Client.new(redis_config)
-  end
-
-  def new_redis
-    Redis.new(redis_config)
-  end
-
-  def new_redis_for_alternate_db
-    config = redis_config.merge(db: redis_config.fetch(:db, 0) + 1)
-    Redis.new(config)
   end
 end
 
@@ -74,42 +51,42 @@ RSpec.configure do |c|
   c.include QlessSpecHelpers
 
   c.before(:each, :js) do
-    pending 'Skipping JS test because JS tests have been flaky on Travis.'
+    pending "Skipping JS test because JS tests have been flaky on Travis."
   end if ENV['TRAVIS']
 end
 
-using_integration_context = false
-shared_context 'redis integration', :integration do
-  using_integration_context = true
-  include RedisHelpers
+shared_context "redis integration", :integration do
+  def new_client
+    Qless::Client.new(redis_config)
+  end
 
-  # A qless client subject to the redis configuration
   let(:client) { new_client }
-  # A plain redis client with the same redis configuration
-  let(:redis)  { new_redis }
 
-  before(:each) { redis.script(:flush) }
-  after(:each)  { redis.flushdb }
-end
-
-RSpec.configure do |c|
-  c.before(:suite) do
-    if using_integration_context && RedisHelpers.new_redis.keys('*').any?
-      config = RedisHelpers.redis_config
-      command = "redis-cli -h #{config.fetch(:host, "127.0.0.1")} -p #{config.fetch(:port, 6379)} -n #{config.fetch(:db, 0)} flushdb"
-      msg = "Aborting since there are keys in your Redis DB and we don't want to accidentally clear data you may care about."
-      msg << "  To clear your DB, run: `#{command}`"
-      raise msg
+  before(:each) do
+    # Sometimes we need raw redis access
+    @redis = Redis.new(redis_config)
+    if @redis.keys("*").length > 0
+      pending "Must start with empty Redis DB, but had keys: #{@redis.keys("*").inspect}"
     end
+    @redis.script(:flush)
+  end
+
+  after(:each) do
+    @redis && @redis.flushdb
   end
 end
 
-# This context kills all the non-main threads and ensure they're cleaned up
-shared_context 'stops all non-main threads', :uses_threads do
+shared_context "stops all non-main threads", :uses_threads do
+  require 'qless/wait_until'
+
+  def non_main_threads
+    Thread.list - [Thread.main]
+  end
+
   after(:each) do
-    # We're going to kill all the non-main threads
-    threads = Thread.list - [Thread.main]
-    threads.each(&:kill)
-    threads.each(&:join)
+    threads_to_kill = self.non_main_threads
+    threads_to_kill.each(&:kill)
+    Qless::WaitUntil.wait_until(2) { non_main_threads.empty? }
   end
 end
+

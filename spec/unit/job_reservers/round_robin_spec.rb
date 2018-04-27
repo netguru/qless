@@ -1,5 +1,3 @@
-# Encoding: utf-8
-
 require 'spec_helper'
 require 'qless/queue'
 require 'qless/job_reservers/round_robin'
@@ -7,18 +5,12 @@ require 'qless/job_reservers/round_robin'
 module Qless
   module JobReservers
     describe RoundRobin do
-      let(:q1) { instance_double('Qless::Queue') }
-      let(:q2) { instance_double('Qless::Queue') }
-      let(:q3) { instance_double('Qless::Queue') }
+      let(:q1) { fire_double("Qless::Queue") }
+      let(:q2) { fire_double("Qless::Queue") }
+      let(:q3) { fire_double("Qless::Queue") }
       let(:reserver) { RoundRobin.new([q1, q2, q3]) }
 
-      def stub_queue_names
-        q1.stub(:name) { 'Queue1' }
-        q2.stub(:name) { 'Queue2' }
-        q3.stub(:name) { 'Queue3' }
-      end
-
-      describe '#reserve' do
+      describe "#reserve" do
         it 'round robins the queues' do
           q1.should_receive(:pop).twice { :q1_job }
           q2.should_receive(:pop).once  { :q2_job }
@@ -38,27 +30,16 @@ module Qless
         end
       end
 
-      describe '#description' do
-        before { stub_queue_names }
-
+      describe "#description" do
         it 'returns a useful human readable string' do
-          reserver.description.should eq(
-            'Queue1, Queue2, Queue3 (round robin)')
-        end
-      end
+          q1.stub(:name) { "Queue1" }
+          q2.stub(:name) { "Queue2" }
+          q3.stub(:name) { "Queue3" }
 
-      describe '#reset_description!' do
-        before do
-          stub_queue_names
-          reserver.description # to set @description
-        end
-
-        it 'sets the description to nil' do
-          expect { reserver.reset_description! }.to change {
-            reserver.instance_variable_get(:@description)
-          }.to(nil)
+          reserver.description.should eq("Queue1, Queue2, Queue3 (round robin)")
         end
       end
     end
   end
 end
+
