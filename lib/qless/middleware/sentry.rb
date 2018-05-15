@@ -1,3 +1,5 @@
+# Encoding: utf-8
+
 require 'raven'
 
 module Qless
@@ -30,13 +32,12 @@ module Qless
 
         def safely_send(event)
           return unless event
-          ::Raven.send(event)
+          ::Raven.send_event(event)
         rescue
           # We don't want to silence our errors when the Sentry server
           # responds with an error. We'll still see the errors on the
           # Qless Web UI.
         end
-
 
         def job_metadata
           {
@@ -55,11 +56,7 @@ module Qless
         def job_history
           @job.queue_history.map do |history_event|
             history_event.each_with_object({}) do |(key, value), hash|
-              hash[key] = if value.is_a?(Time)
-                value.iso8601
-              else
-                value
-              end
+              hash[key] = value.is_a?(Time) ? value.iso8601 : value
             end
           end
         end
@@ -67,4 +64,3 @@ module Qless
     end
   end
 end
-

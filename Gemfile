@@ -7,4 +7,18 @@ group :extras do
   gem 'byebug', :platform => :mri
 end
 
-gem 'thin' # needed by qless-web binary
+group :development do
+  gem 'byebug', :platforms => [:ruby_20, :ruby_21]
+  gem 'cane', :platforms => [:ruby_20, :ruby_21]
+  gem 'poltergeist', '~> 1.0.0'
+  gem 'pry'
+  gem 'pry-byebug', :platforms => [:ruby_20, :ruby_21]
+  gem 'pry-stack_explorer'
+  gem 'rake'
+  gem 'rspec'
+  gem 'rspec-fire'
+  gem 'rubocop'
+  gem 'simplecov'
+  gem 'thin'
+  gem 'timecop'
+end
