@@ -31,6 +31,17 @@
 	      </div>
 	      <div class="col-md-6 text-right">
           <div>
+						<div style="margin-top: 7px;" class="text-right custora-job-priority">
+	            <input style="padding: 1px 12px; width: 100px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
+	            <button class="btn btn-default dropdown-toggle" style="margin-top: -2px; border-top-left-radius: 0; border-bottom-left-radius: 0;" type="button" data-toggle="dropdown" aria-expanded="true">
+	              <i class="caret"></i>
+	            </button>
+	            <ul class="dropdown-menu text-right" role="menu">
+	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  25)">high</a></li>
+	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a></li>
+	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>', -25)">low</a></li>
+	            </ul>
+	          </div>
             <div class="btn-group custora-job-button-group">
               <% if (pt_tag = (job.tags || []).find { |tag| tag.match(/pt-(.*)/) }).nil? %>
                 <button title="Create Pivotal Story" class="btn btn-info" onclick="confirmation(this, 'Create Pivotal Story?', function() { createPivotalStory('<%= job.jid %>', fade) })"><i class="glyphicon glyphicon-copy"></i></button>
@@ -59,24 +70,13 @@
               </ul>
 	          </div>
 	        </div>
-          <div style="margin-top: 7px;" class="text-right custora-job-priority">
-            <input style="padding: 1px 12px; width: 100px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
-            <button class="btn btn-default dropdown-toggle" style="margin-top: -2px; border-top-left-radius: 0; border-bottom-left-radius: 0;" type="button" data-toggle="dropdown" aria-expanded="true">
-              <i class="caret"></i>
-            </button>
-            <ul class="dropdown-menu text-right" role="menu">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  25)">high</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>', -25)">low</a></li>
-            </ul>
-          </div>
 	      </div>
 	    </div>
 
 	    <% if not job.dependencies.empty? %>
 	    <div class="row">
 	      <div class="custora-job-associates" style="margin-bottom: 10px">
-	        <div style="margin-right: 10px"><h3 class="custora-job-associates-label"><small>Dependencies (<%= job.dependencies.count %>):</small></h3></div>
+	        <div style="margin-right: 10px"><h3 class="custora-job-data-label"><small>Dependencies (<%= job.dependencies.count %>):</small></h3></div>
 					<% job.dependencies.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>">
 	          <span class="btn" style="line-height: 24px;" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</span>
@@ -93,7 +93,7 @@
 	    <div class="row">
 	      <div class="custora-job-associates" style="margin-bottom: 10px">
 	        <div style="margin-right: 10px">
-						<h3 class="custora-job-associates-label"><small>Dependents (<%= job.dependents.count %>):</small></h3>
+						<h3 class="custora-job-data-label"><small>Dependents (<%= job.dependents.count %>):</small></h3>
 					</div>
 	        <% job.dependents.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
@@ -110,7 +110,7 @@
 	    <div class="row">
 				<div class="custora-job-associates" style="margin-bottom: 10px">
 					<div style="margin-right: 10px">
-						<h3 class="custora-job-associates-label"><small>Tags:</small></h3>
+						<h3 class="custora-job-data-label"><small>Tags:</small></h3>
 					</div>
 	        <% job.tags.each do |tag| %>
 	        <div class="btn-group custora-job-tags" style="float:left; margin-right: 10px;">
@@ -147,7 +147,7 @@
 	      <div class="col-md-6">
 	        <h3 class="custora-job-data-label"><small>Context</small></h3>
 					<% if job.data["context"] && job.data["context"].is_a?(Array) %>
-						<pre><%= job.data["context"].last.to_s.gsub(/</, '&lt;') %></pre>
+						<pre style="margin-bottom: 0px;"><%= job.data["context"].last.to_s.gsub(/</, '&lt;') %></pre>
 					<% end %>
 	        <h3 class="custora-job-data-label"><small>History</small></h3>
 	        <div style="overflow-y:scroll; height: 400px">
