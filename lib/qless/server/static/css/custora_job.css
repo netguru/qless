@@ -1,8 +1,22 @@
+.custora-job-status {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+h3.custora-job-associates {
+  margin-left: 15px;
+  font-size: 16px;
+}
+
+.custora-remove-button {
+  padding: 6px;
+}
+
+.custora-remove-icon {
+  color: dimgray;
+}
+
 @media only screen and (max-width: 767px) {
-  .custora-job-status {
-    margin-top: 0px;
-    margin-bottom: 5px;
-  }
   .custora-job-id {
     display: block;
   }
@@ -33,19 +47,6 @@
     padding-top: 3px;
     margin-left: 5px;
     cursor: pointer;
-  }
-
-  h3.custora-job-associates {
-    margin-left: 15px;
-    font-size: 16px;
-  }
-
-  .custora-remove-button {
-    padding: 6px;
-  }
-
-  .custora-remove-icon {
-    color: dimgray;
   }
 }
 
