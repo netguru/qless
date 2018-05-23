@@ -36,7 +36,7 @@
 	            <button class="btn btn-default dropdown-toggle" style="margin-top: -2px; border-top-left-radius: 0; border-bottom-left-radius: 0;" type="button" data-toggle="dropdown" aria-expanded="true">
 	              <i class="caret"></i>
 	            </button>
-	            <ul class="dropdown-menu text-right" role="menu">
+	            <ul class="dropdown-menu text-right" style="margin-left: 246px;" role="menu">
 	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  25)">high</a></li>
 	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a></li>
 	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>', -25)">low</a></li>
@@ -228,7 +228,7 @@
       				<button class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="caret"></i>
               </button>
-	            <ul class="dropdown-menu">
+	            <ul class="dropdown-menu" style:"margin-left: 246px;">
 				    	  <a href="#" onclick="priority('<%= job.jid %>',  25)">high</a>
 	              <a href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a>
 	              <a href="#" onclick="priority('<%= job.jid %>', -25)">low</a>
