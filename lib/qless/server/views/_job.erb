@@ -77,12 +77,12 @@
 
 	    <% if not job.dependencies.empty? %>
 	    <div class="row">
-	      <div class="col-md-12" style="margin-bottom: 10px">
-	        <div style="margin-right: 10px"><h3 class="custora-job-associates"><small>Dependencies (<%= job.dependencies.count %>):</small></h3></div>
+	      <div class="custora-job-associates" style="margin-bottom: 10px">
+	        <div style="margin-right: 10px"><h3 class="custora-job-associates-label"><small>Dependencies (<%= job.dependencies.count %>):</small></h3></div>
 					<% job.dependencies.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle custora-remove-button" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
+	          <span class="btn" style="line-height: 24px;" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</span>
+	          <button class="btn btn-default custora-remove-button" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
 	            <i class="glyphicon glyphicon-remove custora-remove-icon"></i>
 	          </button>
 	        </div>
@@ -93,14 +93,14 @@
 
 	    <% if not job.dependents.empty? %>
 	    <div class="row">
-	      <div class="span12" style="margin-bottom: 10px">
+	      <div class="custora-job-associates" style="margin-bottom: 10px">
 	        <div style="margin-right: 10px">
-						<h3 class="custora-job-associates"><small>Dependents (<%= job.dependents.count %>):</small></h3>
+						<h3 class="custora-job-associates-label"><small>Dependents (<%= job.dependents.count %>):</small></h3>
 					</div>
 	        <% job.dependents.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle custora-remove-button" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
+	          <span class="btn" style="line-height: 24px;" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</span>
+	          <button class="btn btn-default custora-remove-button" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
 	            <i class="glyphicon glyphicon-remove custora-remove-icon"></i>
 	          </button>
 	        </div>
@@ -110,10 +110,10 @@
 	    <% end %>
 
 	    <div class="row">
-				<div style="margin-right: 10px">
-					<h3 class="custora-job-associates"><small>Tags:</small></h3>
-				</div>
-	      <div class="col-md-12 tags" style="margin-bottom: 3px;">
+				<div class="custora-job-associates" style="margin-bottom: 10px">
+					<div style="margin-right: 10px">
+						<h3 class="custora-job-associates-label"><small>Tags:</small></h3>
+					</div>
 	        <% job.tags.each do |tag| %>
 	        <div class="btn-group custora-job-tags" style="float:left; margin-right: 10px;">
             <span class="tag" style="line-height: 24px;"><a href="<%= u "/tag/?tag=#{tag}" %>"><%= tag %></a></span>

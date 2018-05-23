@@ -3,9 +3,13 @@
   margin-bottom: 5px;
 }
 
-h3.custora-job-associates {
+.custora-job-associates {
   margin-left: 15px;
-  font-size: 16px;
+}
+
+h3.custora-job-associates-label {
+  margin-bottom: 2px;
+  font-size: 24px;
 }
 
 .custora-remove-button {
