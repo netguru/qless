@@ -3,18 +3,18 @@
   margin: 5px 15px 5px 0px;
 }
 
+.custora-job-priority {
+  display: inline-block;
+}
+
 .custora-job-associates {
   margin-left: 15px;
 }
 
-h3.custora-job-associates-label {
+h3.custora-job-data-label {
   margin-top: 6px;
   margin-bottom: 2px;
   font-size: 24px;
-}
-
-h3.custora-job-data-label {
-  margin-bottom: 2px;
 }
 
 .custora-remove-button {

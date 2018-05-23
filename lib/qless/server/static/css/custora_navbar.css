@@ -58,7 +58,7 @@
   .custora-logo2 {
     display: inline-block;
     float: right;
-    margin-top: 16px;
+    margin-top: 12px;
     margin-left: 10px;
     height: 30px;
     width: 81px;
@@ -70,7 +70,7 @@
 
 .custora-navbar {
   width: 100%;
-  background-color: rgb(200,237,251);
+  background-color: #D2D3ED;
 }
 
 .custora-collapse {
