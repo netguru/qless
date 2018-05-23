@@ -7,19 +7,17 @@
 	    <div class="row">
 	      <div class="col-md-6">
 
-	        <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
-            <h4 class="custora-job-status">
-              <% if job.state == 'failed' %>
-                <span class="label label-danger"><%= job.state %></span>
-              <% elsif job.state == 'complete' %>
-                <span class="label label-success"><%= job.state %></span>
-              <% elsif job.state == 'stalled' %>
-                <span class="label label-warning"><%= job.state %></span>
-              <% else %>
-                <span class="label label-default"><%= job.state %></span>
-              <% end %>
-            </h4>
-	        </div>
+          <h4 class="custora-job-status">
+            <% if job.state == 'failed' %>
+              <span class="label label-danger"><%= job.state %></span>
+            <% elsif job.state == 'complete' %>
+              <span class="label label-success"><%= job.state %></span>
+            <% elsif job.state == 'stalled' %>
+              <span class="label label-warning"><%= job.state %></span>
+            <% else %>
+              <span class="label label-default"><%= job.state %></span>
+            <% end %>
+          </h4>
 
 	        <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
             <h5>
@@ -143,15 +141,15 @@
 	    <% if not defined? brief %>
 	    <div class="row">
 	      <div class="col-md-6">
-          <h3><small>Data</small></h3>
+          <h3 class="custora-job-data-label"><small>Data</small></h3>
 					<pre style="overflow-y:scroll; height: 400px"><%= JSON.pretty_generate(job.data).gsub(/</, '&lt;') %></pre>
 	      </div>
 	      <div class="col-md-6">
-	        <h3><small>Context</small></h3>
+	        <h3 class="custora-job-data-label"><small>Context</small></h3>
 					<% if job.data["context"] && job.data["context"].is_a?(Array) %>
 						<pre><%= job.data["context"].last.to_s.gsub(/</, '&lt;') %></pre>
 					<% end %>
-	        <h3><small>History</small></h3>
+	        <h3 class="custora-job-data-label"><small>History</small></h3>
 	        <div style="overflow-y:scroll; height: 400px">
 	          <% job.queue_history.reverse.each do |h| %>
 	          <% if h['what'] == 'put' %>
@@ -264,7 +262,7 @@
 	    <% if not defined? brief %>
 	    <div class="row">
 	      <div class="col-md-12">
-	        <h3><small>Data</small></h3>
+	        <h3 class="custora-job-data-label"><small>Data</small></h3>
 	        <pre style="overflow-y:scroll; height: 200px"><%= JSON.pretty_generate(job.data).gsub(/</, '&lt;') %></pre>
 	      </div>
 	    </div>
