@@ -1,5 +1,6 @@
 @media only screen and (max-width: 767px) {
-  .custora-job-label {
+  .custora-job-status {
+    margin-top: 0px;
     margin-bottom: 5px;
   }
   .custora-job-id {
@@ -34,8 +35,17 @@
     cursor: pointer;
   }
 
-  h3.depends-header {
+  h3.custora-job-associates {
+    margin-left: 15px;
     font-size: 16px;
+  }
+
+  .custora-remove-button {
+    padding: 6px;
+  }
+
+  .custora-remove-icon {
+    color: dimgray;
   }
 }
 
