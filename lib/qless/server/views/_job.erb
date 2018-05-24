@@ -7,19 +7,17 @@
 	    <div class="row">
 	      <div class="col-md-6">
 
-	        <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
-            <h4 class="custora-job-label">
-              <% if job.state == 'failed' %>
-                <span class="label label-danger"><%= job.state %></span>
-              <% elsif job.state == 'complete' %>
-                <span class="label label-success"><%= job.state %></span>
-              <% elsif job.state == 'stalled' %>
-                <span class="label label-warning"><%= job.state %></span>
-              <% else %>
-                <span class="label label-default"><%= job.state %></span>
-              <% end %>
-            </h4>
-	        </div>
+          <h4 class="custora-job-status">
+            <% if job.state == 'failed' %>
+              <span class="label label-danger"><%= job.state %></span>
+            <% elsif job.state == 'complete' %>
+              <span class="label label-success"><%= job.state %></span>
+            <% elsif job.state == 'stalled' %>
+              <span class="label label-warning"><%= job.state %></span>
+            <% else %>
+              <span class="label label-default"><%= job.state %></span>
+            <% end %>
+          </h4>
 
 	        <div style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
             <h5>
@@ -33,6 +31,17 @@
 	      </div>
 	      <div class="col-md-6 text-right">
           <div>
+						<div style="margin-top: 7px;" class="text-right custora-job-priority">
+	            <input style="padding: 1px 12px; width: 100px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
+	            <button class="btn btn-default dropdown-toggle" style="margin-top: -2px; border-top-left-radius: 0; border-bottom-left-radius: 0;" type="button" data-toggle="dropdown" aria-expanded="true">
+	              <i class="caret"></i>
+	            </button>
+	            <ul class="dropdown-menu text-right" style="margin-left: 246px;" role="menu">
+	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  25)">high</a></li>
+	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a></li>
+	              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>', -25)">low</a></li>
+	            </ul>
+	          </div>
             <div class="btn-group custora-job-button-group">
               <% if (pt_tag = (job.tags || []).find { |tag| tag.match(/pt-(.*)/) }).nil? %>
                 <button title="Create Pivotal Story" class="btn btn-info" onclick="confirmation(this, 'Create Pivotal Story?', function() { createPivotalStory('<%= job.jid %>', fade) })"><i class="glyphicon glyphicon-copy"></i></button>
@@ -61,29 +70,18 @@
               </ul>
 	          </div>
 	        </div>
-          <div style="margin-top: 7px;" class="text-right custora-job-priority">
-            <input style="padding: 1px 12px; width: 100px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Pri <%= job.priority %>" onchange="priority('<%= job.jid %>', $(this).val())"></input>
-            <button class="btn btn-default dropdown-toggle" style="margin-top: -2px; border-top-left-radius: 0; border-bottom-left-radius: 0;" type="button" data-toggle="dropdown" aria-expanded="true">
-              <i class="caret"></i>
-            </button>
-            <ul class="dropdown-menu text-right" role="menu">
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  25)">high</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="priority('<%= job.jid %>', -25)">low</a></li>
-            </ul>
-          </div>
 	      </div>
 	    </div>
 
 	    <% if not job.dependencies.empty? %>
 	    <div class="row">
-	      <div class="col-md-12" style="margin-bottom: 10px">
-	        <div style="float:left; margin-right: 10px"><h3 class="depends-header">Dependencies (<%= job.dependencies.count %>):</h3></div>
+	      <div class="custora-job-associates" style="margin-bottom: 10px">
+	        <div style="margin-right: 10px"><h3 class="custora-job-data-label"><small>Dependencies (<%= job.dependencies.count %>):</small></h3></div>
 					<% job.dependencies.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
-	            <i class="icon-remove"></i>
+	          <span class="btn" style="line-height: 24px;" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</span>
+	          <button class="btn btn-default custora-remove-button" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= job.jid %>', '<%= jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependson-#{jid}") %>').remove()} ); })">
+	            <i class="glyphicon glyphicon-remove custora-remove-icon"></i>
 	          </button>
 	        </div>
 					<% end %>
@@ -93,15 +91,15 @@
 
 	    <% if not job.dependents.empty? %>
 	    <div class="row">
-	      <div class="span12" style="margin-bottom: 10px">
-	        <div style="float:left; margin-right: 10px">
-						<h3 class="depends-header">Dependents (<%= job.dependents.count %>):</h3>
+	      <div class="custora-job-associates" style="margin-bottom: 10px">
+	        <div style="margin-right: 10px">
+						<h3 class="custora-job-data-label"><small>Dependents (<%= job.dependents.count %>):</small></h3>
 					</div>
 	        <% job.dependents.each do |jid| %>
 	        <div class="btn-group" style="float:left; margin-right: 10px" id="<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>">
-	          <button class="btn" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</button>
-	          <button class="btn dropdown-toggle" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
-	            <i class="icon-remove"></i>
+	          <span class="btn" style="line-height: 24px;" onclick="window.open('<%= u "/jobs/#{jid}" %>', '_blank')" title="<%= jid %>"><%= jid[0...8] %>...</span>
+	          <button class="btn btn-default custora-remove-button" onclick="confirmation(this, 'Undepend?', function() { undepend('<%= jid %>', '<%= job.jid %>', function() { $('#<%= sanitize_attr("#{job.jid}-dependents-#{jid}") %>').remove()} ); })">
+	            <i class="glyphicon glyphicon-remove custora-remove-icon"></i>
 	          </button>
 	        </div>
 	        <% end %>
@@ -110,18 +108,21 @@
 	    <% end %>
 
 	    <div class="row">
-	      <div class="col-md-12 tags" style="margin-bottom: 3px;">
+				<div class="custora-job-associates" style="margin-bottom: 10px">
+					<div style="margin-right: 10px">
+						<h3 class="custora-job-data-label"><small>Tags:</small></h3>
+					</div>
 	        <% job.tags.each do |tag| %>
 	        <div class="btn-group custora-job-tags" style="float:left; margin-right: 10px;">
             <span class="tag" style="line-height: 24px;"><a href="<%= u "/tag/?tag=#{tag}" %>"><%= tag %></a></span>
-				    <button class="btn btn-default" onclick="untag('<%= job.jid %>', '<%= tag %>')">
-	            <i class="glyphicon glyphicon-remove"></i>
+				    <button class="btn btn-default custora-remove-button" onclick="untag('<%= job.jid %>', '<%= tag %>')">
+	            <i class="glyphicon glyphicon-remove custora-remove-icon"></i>
 	          </button>
 	        </div>
 					<ul class="custora-job-tag-list">
 						<li>
 							<a href="<%= u "/tag/?tag=#{tag}" %>"><%= tag %></a>
-							<span onclick="untag('<%= job.jid %>', '<%= tag %>')"><i class="glyphicon glyphicon-remove"></i></span><%= %>
+							<span onclick="untag('<%= job.jid %>', '<%= tag %>')"><i class="glyphicon glyphicon-remove custora-remove-icon"></i></span><%= %>
 						</li>
 					</ul>
 	        <% end %>
@@ -130,8 +131,8 @@
 	        <div class="btn-group add-tag" style="float:left">
 
             <input style="padding: 1px 12px; width: 200px; line-height: 30px; margin-right: -5px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; box-shadow: inset 0 1px 1px rgba(0,0,0,.075); border: 1px solid #ccc;" class="priority" type="text" placeholder="Add tag" onchange="var v = $(this).val(); if (v.length > 0) { tag('<%= job.jid %>', v) }"></input>
-				    <button class="btn btn-default" onclick="tag('<%= job.jid %>', $(this).parent().siblings().val())">
-	            <i class="glyphicon glyphicon-plus"></i>
+				    <button class="btn btn-default custora-remove-button" onclick="tag('<%= job.jid %>', $(this).parent().siblings().val())">
+	            <i class="glyphicon glyphicon-plus custora-remove-icon"></i>
 	          </button>
 	        </div>
 	      </div>
@@ -140,15 +141,15 @@
 	    <% if not defined? brief %>
 	    <div class="row">
 	      <div class="col-md-6">
-          <h3><small>Data</small></h3>
+          <h3 class="custora-job-data-label"><small>Data</small></h3>
 					<pre style="overflow-y:scroll; height: 400px"><%= JSON.pretty_generate(job.data).gsub(/</, '&lt;') %></pre>
 	      </div>
 	      <div class="col-md-6">
-	        <h3><small>Context</small></h3>
+	        <h3 class="custora-job-data-label"><small>Context</small></h3>
 					<% if job.data["context"] && job.data["context"].is_a?(Array) %>
-						<pre><%= job.data["context"].last.to_s.gsub(/</, '&lt;') %></pre>
+						<pre style="margin-bottom: 0px;"><%= job.data["context"].last.to_s.gsub(/</, '&lt;') %></pre>
 					<% end %>
-	        <h3><small>History</small></h3>
+	        <h3 class="custora-job-data-label"><small>History</small></h3>
 	        <div style="overflow-y:scroll; height: 400px">
 	          <% job.queue_history.reverse.each do |h| %>
 	          <% if h['what'] == 'put' %>
@@ -227,7 +228,7 @@
       				<button class="btn dropdown-toggle" data-toggle="dropdown">
                 <i class="caret"></i>
               </button>
-	            <ul class="dropdown-menu">
+	            <ul class="dropdown-menu" style:"margin-left: 246px;">
 				    	  <a href="#" onclick="priority('<%= job.jid %>',  25)">high</a>
 	              <a href="#" onclick="priority('<%= job.jid %>',  0 )">normal</a>
 	              <a href="#" onclick="priority('<%= job.jid %>', -25)">low</a>
@@ -261,7 +262,7 @@
 	    <% if not defined? brief %>
 	    <div class="row">
 	      <div class="col-md-12">
-	        <h3><small>Data</small></h3>
+	        <h3 class="custora-job-data-label"><small>Data</small></h3>
 	        <pre style="overflow-y:scroll; height: 200px"><%= JSON.pretty_generate(job.data).gsub(/</, '&lt;') %></pre>
 	      </div>
 	    </div>
