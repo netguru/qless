@@ -10,9 +10,6 @@ module Qless
       end
 
       def reserve
-        unless @queues
-          raise RuntimeError, 'Queues are missing unexpectedly!'
-        end
         @queues.each do |q|
           job = q.pop
           return job if job
