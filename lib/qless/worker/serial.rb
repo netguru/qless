@@ -32,7 +32,12 @@ module Qless
         listen_for_lost_lock do
           procline "Running #{reserver.description}"
 
-          jobs.each do |job|
+          _jobs = jobs
+          unless _jobs
+            raise RuntimeError, 'Jobs are missing unexpectedly!'
+          end
+
+          _jobs.each do |job|
             # Run the job we're working on
             log(:debug, "Starting job #{job.klass_name} (#{job.jid} from #{job.queue_name})")
             perform(job)
