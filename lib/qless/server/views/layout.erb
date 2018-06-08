@@ -133,6 +133,10 @@
       });
     }
 
+    var addExistingPivotalStoryTag = function (jid, id) {
+      tag(jid, "pt-" + id)
+    }
+
     var jobToStory = function(job) {
       var data = {};
 
@@ -266,6 +270,11 @@
         });
         action();
       });
+    }
+
+    var view_and_move_to_pt = function(jid, story_id) {
+      window.open('https://www.pivotaltracker.com/story/show/<%=story_id%>', '_blank')
+      job.untag(jid, 'auto-gen-pt')
     }
 
     /* Helper function for adding a tag to a job */

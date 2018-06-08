@@ -127,27 +127,26 @@ module Qless
         client.jobs.failed
       end
 
-      def failed_jobs_by_type(tagged: nil, include_not_tagged: true)
+      def failed_jobs_by_type(include_tag: nil, exclude_tag: nil)
+        # include_tag and exclude_tag here work together, so that tagged returns all jobs that
+        # have the include tag but do not have the exclude_tag.
+
         jobs = client.jobs.failed.map { |k, v| [k, client.jobs.failed(k)["jobs"]] }.to_h
+        tagged = jobs.transform_values do |v|
+          v.select { |j| !j.tags.grep(include_tag).empty? && j.tags.grep(exclude_tag).empty? }
+        end.select { |_k, v| !v.empty? }
 
-        tagged_jobs = if tagged
-          jobs.
-            transform_values { |v| v.select { |job| res = job.tags.grep(tagged); res && res.count > 0 } }.
-            select { |k, v| v.length > 0 }
-        else
-          jobs
-        end
+        not_tagged = jobs.transform_values do |v|
+          ## select jobs where job.tags does not include the include_tag or where job.tags includes exclude tag
+          v.select do |job|
+            job.tags.grep(include_tag).empty? || !job.tags.grep(exclude_tag).empty?
+          end
+        end.select { |_k, v| !v.empty? }
 
-        if include_not_tagged && tagged
-          {
-            tagged: tagged_jobs,
-            not_tagged: jobs.
-              transform_values { |v| v.select { |job| res = job.tags.grep(tagged); res && res.count == 0 } }.
-              select { |k, v| v.length > 0 },
-          }
-        else
-          tagged_jobs
-        end
+        {
+          tagged: tagged,
+          not_tagged: not_tagged
+        }
       end
 
       # Return the supplied object back as JSON
