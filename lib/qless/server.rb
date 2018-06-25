@@ -129,20 +129,11 @@ module Qless
 
       def failed_jobs_by_type(include_tag: nil, exclude_tag: nil)
         jobs = client.jobs.failed.map { |k, _v| [k, client.jobs.failed(k)['jobs']] }.to_h
-
-        find_tagged = jobs.transform_values do |v|
-          v.select { |j| !j.tags.grep(include_tag).empty? && j.tags.grep(exclude_tag).empty? }
-        end
-
-        find_not_tagged = jobs.transform_values do |v|
-          v.select do |job|
-            job.tags.grep(include_tag).empty? || !job.tags.grep(exclude_tag).empty?
-          end
-        end
+        tag_filter = lambda { |j| !j.tags.grep(include_tag).empty? && j.tags.grep(exclude_tag).empty? }
 
         {
-          tagged: find_tagged.reject { |_k, v| v.empty? },
-          not_tagged: find_not_tagged.reject { |_k, v| v.empty? }
+          tagged: jobs.transform_values { |v| v.select(&tag_filter) }.reject { |_k, v| v.empty? },
+          not_tagged: jobs.transform_values { |v| v.reject(&tag_filter) }.reject { |_k, v| v.empty? },
         }
       end
 
