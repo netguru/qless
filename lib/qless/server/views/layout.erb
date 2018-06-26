@@ -269,7 +269,7 @@
     }
 
     var view_and_move_to_pt = function(jid, storyId) {
-      window.open('https://www.pivotaltracker.com/story/show/<%=storyId%>', '_blank');
+      window.open('https://www.pivotaltracker.com/story/show/' + storyId, '_blank');
       untag(jid, 'auto-gen-pt');
     }
 
