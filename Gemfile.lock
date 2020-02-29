@@ -39,10 +39,6 @@ GEM
     columnize (0.3.6)
     daemons (1.2.3)
     debug_inspector (0.0.2)
-    debugger (1.6.2)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.2.3)
     debugger-linecache (1.2.0)
     diff-lcs (1.2.4)
     eventmachine (1.0.9.1)
@@ -91,7 +87,7 @@ GEM
     rack-test (0.6.2)
       rack (>= 1.0)
     rainbow (1.1.4)
-    rake (10.1.0)
+    rake (13.0.1)
     redis (3.3.3)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -145,7 +141,6 @@ PLATFORMS
 DEPENDENCIES
   byebug
   cane
-  debugger
   poltergeist (~> 1.0.0)
   pry
   pry-byebug
